@@ -588,6 +588,7 @@ MonoBehaviour:
   _enemiesPerWave: 5
   _spawnInterval: 1
   _timeBetweenWaves: 5
+  _baseHealth: {fileID: 655053230}
 --- !u!1 &871349105
 GameObject:
   m_ObjectHideFlags: 0
