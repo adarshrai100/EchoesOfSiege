@@ -62,10 +62,16 @@ public class GridSelector : MonoBehaviour
     {
         GameObject tower = Instantiate(_towerPrefab);
 
-        float towerHalfHeight = tower.transform.localScale.y / 2f;
+        // Get grid top surface from collider bounds
+        Collider gridCollider = cell.GetComponent<Collider>();
+        float gridTop = gridCollider.bounds.max.y;
+
+        // Get tower half height from its collider bounds
+        Collider towerCollider = tower.GetComponent<Collider>();
+        float towerHalfHeight = towerCollider.bounds.extents.y;
 
         Vector3 position = cell.transform.position;
-        position.y += (cell.transform.localScale.y / 2f) + towerHalfHeight;
+        position.y = gridTop + towerHalfHeight;
 
         tower.transform.position = position;
 
