@@ -45,15 +45,6 @@ public class GridSelector : MonoBehaviour
         }
     }
 
-    private void ClearCurrentCell()
-    {
-        if (_currentCell != null)
-        {
-            _currentCell.Highlight(false);
-            _currentCell = null;
-        }
-    }
-
     private void HandlePlacement()
     {
         if (_currentCell == null) return;
@@ -69,11 +60,24 @@ public class GridSelector : MonoBehaviour
 
     private void PlaceTower(GridCell cell)
     {
-        Vector3 position = cell.transform.position;
-        position.y += 1f; // raise tower slightly above grid
+        GameObject tower = Instantiate(_towerPrefab);
 
-        Instantiate(_towerPrefab, position, Quaternion.identity);
+        float towerHalfHeight = tower.transform.localScale.y / 2f;
+
+        Vector3 position = cell.transform.position;
+        position.y += (cell.transform.localScale.y / 2f) + towerHalfHeight;
+
+        tower.transform.position = position;
 
         cell.SetOccupied(true);
+    }
+
+    private void ClearCurrentCell()
+    {
+        if (_currentCell != null)
+        {
+            _currentCell.Highlight(false);
+            _currentCell = null;
+        }
     }
 }

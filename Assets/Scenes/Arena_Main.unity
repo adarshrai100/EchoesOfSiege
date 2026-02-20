@@ -809,7 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridSelector
   _camera: {fileID: 330585545}
-  _towerPrefab: {fileID: 0}
+  _towerPrefab: {fileID: 2093622539639626414, guid: 02292c6171eb267459f723f665d75634, type: 3}
 --- !u!1 &1442291432
 GameObject:
   m_ObjectHideFlags: 0

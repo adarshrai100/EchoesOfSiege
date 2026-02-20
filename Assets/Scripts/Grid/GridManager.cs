@@ -23,9 +23,11 @@ public class GridManager : MonoBehaviour
         {
             for (int z = 0; z < _height; z++)
             {
+                float gridHalfHeight = _cellPrefab.transform.localScale.y / 2f;
+
                 Vector3 position = new Vector3(
                     x * _cellSize,
-                    0,
+                    gridHalfHeight,
                     z * _cellSize
                 );
 
