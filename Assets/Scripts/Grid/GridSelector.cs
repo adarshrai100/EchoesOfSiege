@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GridSelector : MonoBehaviour
 {
@@ -13,7 +14,10 @@ public class GridSelector : MonoBehaviour
 
     private void HandleMouseHover()
     {
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        if (Mouse.current == null) return;
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = _camera.ScreenPointToRay(mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
