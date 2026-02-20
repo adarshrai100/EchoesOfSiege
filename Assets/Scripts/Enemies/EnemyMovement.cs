@@ -6,10 +6,12 @@ public class EnemyMovement : MonoBehaviour
 
     private PathManager _pathManager;
     private int _currentWaypointIndex;
+    private BaseHealth _baseHealth;
 
-    public void Initialize(PathManager pathManager)
+    public void Initialize(PathManager pathManager, BaseHealth baseHealth)
     {
         _pathManager = pathManager;
+        _baseHealth = baseHealth;
         _currentWaypointIndex = 0;
 
         transform.position = _pathManager.GetStartWaypoint().position;
@@ -49,6 +51,7 @@ public class EnemyMovement : MonoBehaviour
     private void ReachBase()
     {
         Debug.Log("Enemy reached base.");
+        _baseHealth?.TakeDamage(10f);
         Destroy(gameObject);
     }
 }
