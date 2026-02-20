@@ -20,6 +20,11 @@ public class EnemyMovement : MonoBehaviour
         if (_pathManager == null) return;
 
         MoveAlongPath();
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            GetComponent<IDamageable>()?.TakeDamage(5f);
+        }
     }
 
     private void MoveAlongPath()

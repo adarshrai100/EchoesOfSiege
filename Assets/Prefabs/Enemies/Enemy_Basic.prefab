@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6873752204784231601}
   - component: {fileID: 9094997579910159859}
   - component: {fileID: 8305879053390710603}
+  - component: {fileID: 4787745238173624415}
   m_Layer: 0
   m_Name: Enemy_Basic
   m_TagString: Untagged
@@ -128,3 +129,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   _moveSpeed: 3
+--- !u!114 &4787745238173624415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543789337213004359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e88ff518af8d6478d788f7fda85761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  _maxHealth: 10
