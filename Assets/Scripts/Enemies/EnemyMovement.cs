@@ -3,6 +3,7 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private float _baseDamage = 10f;
 
     private PathManager _pathManager;
     private int _currentWaypointIndex;
@@ -50,8 +51,11 @@ public class EnemyMovement : MonoBehaviour
 
     private void ReachBase()
     {
-        Debug.Log("Enemy reached base.");
-        _baseHealth?.TakeDamage(10f);
+        if (_baseHealth == null) return;
+
+        Debug.Log("Enemy reached base and dealt damage.");
+        _baseHealth.TakeDamage(_baseDamage);
+
         Destroy(gameObject);
     }
 }

@@ -5,6 +5,7 @@ public class TowerBase : MonoBehaviour
     [SerializeField] private float _range = 5f;
     [SerializeField] private float _fireRate = 1f;
     [SerializeField] private float _damage = 5f;
+    [SerializeField] private Projectile _projectilePrefab;
 
     private float _fireCooldown;
     private EnemyHealth _currentTarget;
@@ -46,7 +47,13 @@ public class TowerBase : MonoBehaviour
 
         if (_fireCooldown <= 0f)
         {
-            _currentTarget.TakeDamage(_damage);
+            Projectile projectile = Instantiate(
+            _projectilePrefab,
+            transform.position,
+            Quaternion.identity
+            );
+
+            projectile.Initialize(_currentTarget, _damage);
             _fireCooldown = 1f / _fireRate;
         }
     }

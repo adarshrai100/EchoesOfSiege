@@ -15,6 +15,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _currentHealth -= amount;
 
+        Debug.Log("Enemy HP: " + _currentHealth);
+
         if (_currentHealth <= 0f)
         {
             Die();
