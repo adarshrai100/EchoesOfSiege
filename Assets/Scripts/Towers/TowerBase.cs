@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class TowerBase : MonoBehaviour
 {
+    [Header("Combat Settings")]
     [SerializeField] private float _range = 5f;
     [SerializeField] private float _fireRate = 1f;
-    [SerializeField] private float _damage = 5f;
-    [SerializeField] private Projectile _projectilePrefab;
+    [SerializeField] private float _damage = 10f;
+
+    private ObjectPool _projectilePool;
 
     private float _fireCooldown;
     private EnemyHealth _currentTarget;
@@ -16,8 +18,14 @@ public class TowerBase : MonoBehaviour
         HandleAttack();
     }
 
+    public void Initialize(ObjectPool projectilePool)
+    {
+        _projectilePool = projectilePool;
+    }
+
     private void HandleTargeting()
     {
+        // Keep target if still valid
         if (_currentTarget != null && _currentTarget.gameObject.activeInHierarchy)
             return;
 
@@ -48,25 +56,24 @@ public class TowerBase : MonoBehaviour
     {
         if (_currentTarget == null) return;
 
-        if (_currentTarget == null || !_currentTarget.gameObject.activeInHierarchy)
-        {
-            _currentTarget = null;
-            return;
-        }
-
         _fireCooldown -= Time.deltaTime;
 
         if (_fireCooldown <= 0f)
         {
-            Projectile projectile = Instantiate(
-            _projectilePrefab,
-            transform.position,
-            Quaternion.identity
-            );
-
-            projectile.Initialize(_currentTarget, _damage);
+            FireProjectile();
             _fireCooldown = 1f / _fireRate;
         }
+    }
+
+    private void FireProjectile()
+    {
+        if (_projectilePool == null) return;
+
+        GameObject obj = _projectilePool.Get();
+        obj.transform.position = transform.position;
+
+        Projectile projectile = obj.GetComponent<Projectile>();
+        projectile.Initialize(_currentTarget, _damage, _projectilePool);
     }
 
     private void OnDrawGizmosSelected()

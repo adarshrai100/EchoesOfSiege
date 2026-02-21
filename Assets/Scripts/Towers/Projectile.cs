@@ -6,18 +6,20 @@ public class Projectile : MonoBehaviour
 
     private EnemyHealth _target;
     private float _damage;
+    private ObjectPool _pool;
 
-    public void Initialize(EnemyHealth target, float damage)
+    public void Initialize(EnemyHealth target, float damage, ObjectPool pool)
     {
         _target = target;
         _damage = damage;
+        _pool = pool;
     }
 
     private void Update()
     {
         if (_target == null)
         {
-            Destroy(gameObject);
+            _pool.Return(gameObject);
             return;
         }
 
@@ -42,6 +44,6 @@ public class Projectile : MonoBehaviour
             _target.TakeDamage(_damage);
         }
 
-        Destroy(gameObject);
+        _pool.Return(gameObject);
     }
 }

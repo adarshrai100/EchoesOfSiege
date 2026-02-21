@@ -7,6 +7,7 @@ public class GridSelector : MonoBehaviour
     [SerializeField] private GameObject _towerPrefab;
     [SerializeField] private ResourceManager _resourceManager;
     [SerializeField] private int _towerCost = 25;
+    [SerializeField] private ObjectPool _projectilePool;
 
     private GridCell _currentCell;
 
@@ -77,6 +78,9 @@ public class GridSelector : MonoBehaviour
         position.y = gridTop + towerHalfHeight;
 
         tower.transform.position = position;
+
+        TowerBase towerBase = tower.GetComponent<TowerBase>();
+        towerBase.Initialize(_projectilePool);
 
         cell.SetOccupied(true);
     }
