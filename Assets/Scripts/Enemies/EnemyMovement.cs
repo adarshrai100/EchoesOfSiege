@@ -9,6 +9,8 @@ public class EnemyMovement : MonoBehaviour
     private int _currentWaypointIndex;
     private BaseHealth _baseHealth;
 
+    public int CurrentWaypointIndex => _currentWaypointIndex;
+
     public void Initialize(PathManager pathManager, BaseHealth baseHealth)
     {
         _pathManager = pathManager;

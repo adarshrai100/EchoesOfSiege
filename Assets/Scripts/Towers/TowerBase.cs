@@ -18,19 +18,30 @@ public class TowerBase : MonoBehaviour
 
     private void HandleTargeting()
     {
-        if (_currentTarget != null) return;
+        if (_currentTarget != null && _currentTarget.gameObject.activeInHierarchy)
+            return;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, _range);
 
+        EnemyHealth bestTarget = null;
+        int highestProgress = -1;
+
         foreach (Collider hit in hits)
         {
-            EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
-            if (enemy != null)
+            EnemyMovement movement = hit.GetComponent<EnemyMovement>();
+            EnemyHealth health = hit.GetComponent<EnemyHealth>();
+
+            if (movement != null && health != null)
             {
-                _currentTarget = enemy;
-                break;
+                if (movement.CurrentWaypointIndex > highestProgress)
+                {
+                    highestProgress = movement.CurrentWaypointIndex;
+                    bestTarget = health;
+                }
             }
         }
+
+        _currentTarget = bestTarget;
     }
 
     private void HandleAttack()
