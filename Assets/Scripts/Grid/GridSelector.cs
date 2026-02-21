@@ -5,6 +5,8 @@ public class GridSelector : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private GameObject _towerPrefab;
+    [SerializeField] private ResourceManager _resourceManager;
+    [SerializeField] private int _towerCost = 25;
 
     private GridCell _currentCell;
 
@@ -51,9 +53,10 @@ public class GridSelector : MonoBehaviour
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (!_currentCell.IsOccupied)
+            if (!_currentCell.IsOccupied && _resourceManager.CanAfford(_towerCost))
             {
                 PlaceTower(_currentCell);
+                _resourceManager.Spend(_towerCost);
             }
         }
     }
