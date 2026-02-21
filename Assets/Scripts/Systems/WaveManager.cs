@@ -13,6 +13,8 @@ public class WaveManager : MonoBehaviour
 
     private int _currentWave = 0;
 
+    public int CurrentWave => _currentWave;
+
     private void Start()
     {
         StartCoroutine(StartWaveLoop());
