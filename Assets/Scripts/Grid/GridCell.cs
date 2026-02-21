@@ -29,6 +29,6 @@ public class GridCell : MonoBehaviour
     {
         if (_renderer == null) return;
 
-        _renderer.material.color = state ? Color.green : _defaultColor;
+        _renderer.material.SetColor("_BaseColor", state ? Color.green : _defaultColor);
     }
 }
