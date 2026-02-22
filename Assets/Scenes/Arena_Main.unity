@@ -764,6 +764,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseHealth
   _maxHealth: 100
+--- !u!1 &698637204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 698637205}
+  - component: {fileID: 698637206}
+  m_Layer: 0
+  m_Name: EnemyPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &698637205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698637204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1442291433}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &698637206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698637204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3d3c6cb1cf4a7478fb6ae99aaafa6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPool
+  _prefab: {fileID: 543789337213004359, guid: 51ee715557fedac43aa9b5f43ff250ef, type: 3}
+  _initialSize: 20
 --- !u!1 &742492007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,6 +1078,7 @@ MonoBehaviour:
   _spawnInterval: 1
   _timeBetweenWaves: 5
   _baseHealth: {fileID: 655053230}
+  _enemyPool: {fileID: 698637206}
 --- !u!1 &871349105
 GameObject:
   m_ObjectHideFlags: 0
@@ -1429,6 +1476,7 @@ Transform:
   - {fileID: 1350634562}
   - {fileID: 1940048015}
   - {fileID: 810524535}
+  - {fileID: 698637205}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1527162285

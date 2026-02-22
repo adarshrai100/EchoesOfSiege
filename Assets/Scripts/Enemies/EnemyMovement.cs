@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed = 3f;
     [SerializeField] private float _baseDamage = 10f;
 
     private PathManager _pathManager;
-    private int _currentWaypointIndex;
     private BaseHealth _baseHealth;
     private ObjectPool _enemyPool;
+
+    private int _currentWaypointIndex;
 
     public int CurrentWaypointIndex => _currentWaypointIndex;
 
@@ -17,8 +19,10 @@ public class EnemyMovement : MonoBehaviour
         _pathManager = pathManager;
         _baseHealth = baseHealth;
         _enemyPool = enemyPool;
+
         _currentWaypointIndex = 0;
 
+        // Reset position to start waypoint
         transform.position = _pathManager.GetStartWaypoint().position;
     }
 
@@ -55,11 +59,20 @@ public class EnemyMovement : MonoBehaviour
 
     private void ReachBase()
     {
-        if (_baseHealth == null) return;
-
-        Debug.Log("Enemy reached base and dealt damage.");
         _baseHealth?.TakeDamage(_baseDamage);
 
-        _enemyPool.Return(gameObject);
+        if (_enemyPool != null)
+        {
+            _enemyPool.Return(gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    public void SetMoveSpeed(float speed)
+    {
+        _moveSpeed = speed;
     }
 }

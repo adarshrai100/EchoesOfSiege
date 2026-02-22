@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   _moveSpeed: 3
+  _baseDamage: 10
 --- !u!114 &4787745238173624415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,4 +142,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e88ff518af8d6478d788f7fda85761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  _maxHealth: 10
+  _maxHealth: 30
+  _reward: 10

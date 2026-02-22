@@ -129,5 +129,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerBase
   _range: 5
   _fireRate: 1
-  _damage: 50
-  _projectilePrefab: {fileID: 3626182297283919905, guid: adcf587b95c78384c9002da593fe86e1, type: 3}
+  _damage: 10
