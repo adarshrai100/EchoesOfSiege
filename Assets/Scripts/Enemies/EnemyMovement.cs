@@ -8,13 +8,15 @@ public class EnemyMovement : MonoBehaviour
     private PathManager _pathManager;
     private int _currentWaypointIndex;
     private BaseHealth _baseHealth;
+    private ObjectPool _enemyPool;
 
     public int CurrentWaypointIndex => _currentWaypointIndex;
 
-    public void Initialize(PathManager pathManager, BaseHealth baseHealth)
+    public void Initialize(PathManager pathManager, BaseHealth baseHealth, ObjectPool enemyPool)
     {
         _pathManager = pathManager;
         _baseHealth = baseHealth;
+        _enemyPool = enemyPool;
         _currentWaypointIndex = 0;
 
         transform.position = _pathManager.GetStartWaypoint().position;
@@ -56,8 +58,8 @@ public class EnemyMovement : MonoBehaviour
         if (_baseHealth == null) return;
 
         Debug.Log("Enemy reached base and dealt damage.");
-        _baseHealth.TakeDamage(_baseDamage);
+        _baseHealth?.TakeDamage(_baseDamage);
 
-        Destroy(gameObject);
+        _enemyPool.Return(gameObject);
     }
 }

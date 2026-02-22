@@ -6,6 +6,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [SerializeField] private int _reward = 10;
 
     private ResourceManager _resourceManager;
+    private ObjectPool _enemyPool;
     private float _currentHealth;
 
     private void Awake()
@@ -26,9 +27,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
     }
 
+    public void Initialize(ObjectPool pool)
+    {
+        _enemyPool = pool;
+        _currentHealth = _maxHealth;
+    }
+
     private void Die()
     {
         _resourceManager?.Add(_reward);
-        Destroy(gameObject);
+        _enemyPool.Return(gameObject);
     }
 }

@@ -10,6 +10,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private float _spawnInterval = 1f;
     [SerializeField] private float _timeBetweenWaves = 5f;
     [SerializeField] private BaseHealth _baseHealth;
+    [SerializeField] private ObjectPool _enemyPool;
 
     private int _currentWave = 0;
 
@@ -44,7 +45,12 @@ public class WaveManager : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        EnemyMovement enemy = Instantiate(_enemyPrefab);
-        enemy.Initialize(_pathManager, _baseHealth);
+        GameObject obj = _enemyPool.Get();
+
+        EnemyMovement movement = obj.GetComponent<EnemyMovement>();
+        EnemyHealth health = obj.GetComponent<EnemyHealth>();
+
+        movement.Initialize(_pathManager, _baseHealth, _enemyPool);
+        health.Initialize(_enemyPool);
     }
 }
