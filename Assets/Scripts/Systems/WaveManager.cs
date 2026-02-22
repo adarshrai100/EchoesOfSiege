@@ -80,16 +80,19 @@ public class WaveManager : MonoBehaviour
             case EnemyType.Basic:
                 health.SetMaxHealth(_basicHealth);
                 movement.SetMoveSpeed(_basicSpeed);
+                movement.SetColor(Color.white);
                 break;
 
             case EnemyType.Fast:
                 health.SetMaxHealth(_fastHealth);
                 movement.SetMoveSpeed(_fastSpeed);
+                movement.SetColor(Color.yellow);
                 break;
 
             case EnemyType.Tank:
                 health.SetMaxHealth(_tankHealth);
                 movement.SetMoveSpeed(_tankSpeed);
+                movement.SetColor(Color.red);
                 break;
         }
     }

@@ -10,9 +10,18 @@ public class EnemyMovement : MonoBehaviour
     private BaseHealth _baseHealth;
     private ObjectPool _enemyPool;
 
+    private Renderer _renderer;
+    private MaterialPropertyBlock _propertyBlock;
+
     private int _currentWaypointIndex;
 
     public int CurrentWaypointIndex => _currentWaypointIndex;
+
+    private void Awake()
+    {
+        _renderer = GetComponentInChildren<Renderer>();
+        _propertyBlock = new MaterialPropertyBlock();
+    }
 
     public void Initialize(PathManager pathManager, BaseHealth baseHealth, ObjectPool enemyPool)
     {
@@ -74,5 +83,14 @@ public class EnemyMovement : MonoBehaviour
     public void SetMoveSpeed(float speed)
     {
         _moveSpeed = speed;
+    }
+
+    public void SetColor(Color color)
+    {
+        if (_renderer == null) return;
+
+        _renderer.GetPropertyBlock(_propertyBlock);
+        _propertyBlock.SetColor("_BaseColor", color);
+        _renderer.SetPropertyBlock(_propertyBlock);
     }
 }
