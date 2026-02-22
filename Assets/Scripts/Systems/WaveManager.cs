@@ -37,13 +37,13 @@ public class WaveManager : MonoBehaviour
 
     private IEnumerator StartWaveLoop()
     {
-        while (true)
+        while (!GameManager.Instance.IsGameOver)
         {
             yield return new WaitForSeconds(_timeBetweenWaves);
 
-            _currentWave++;
-            Debug.Log("Starting Wave: " + _currentWave);
+            if (GameManager.Instance.IsGameOver) yield break;
 
+            _currentWave++;
             yield return StartCoroutine(SpawnWave());
         }
     }

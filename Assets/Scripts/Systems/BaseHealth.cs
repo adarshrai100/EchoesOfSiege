@@ -34,7 +34,7 @@ public class BaseHealth : MonoBehaviour, IDamageable
     private void Die()
     {
         _isDead = true;
-        Debug.Log("Game Over");
+        GameManager.Instance?.TriggerGameOver();
         // Later we will stop waves and show restart UI
     }
 }

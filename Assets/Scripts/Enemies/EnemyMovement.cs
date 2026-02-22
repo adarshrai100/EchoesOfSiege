@@ -17,6 +17,7 @@ public class EnemyMovement : MonoBehaviour
 
     public int CurrentWaypointIndex => _currentWaypointIndex;
 
+
     private void Awake()
     {
         _renderer = GetComponentInChildren<Renderer>();
@@ -37,6 +38,8 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
+            return;
         if (_pathManager == null) return;
 
         MoveAlongPath();

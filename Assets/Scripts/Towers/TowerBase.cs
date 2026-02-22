@@ -14,6 +14,8 @@ public class TowerBase : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
+            return;
         HandleTargeting();
         HandleAttack();
     }
