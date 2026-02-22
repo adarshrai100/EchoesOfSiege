@@ -43,13 +43,6 @@ public class TowerBase : MonoBehaviour
         _projectilePool = projectilePool;
     }
 
-    private void OnMouseDown()
-    {
-        if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
-            return;
-
-        TowerSelectionUI.Instance?.SelectTower(this);
-    }
 
     private void HandleTargeting()
     {

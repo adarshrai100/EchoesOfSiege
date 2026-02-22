@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 7384776415786498450}
   - component: {fileID: 4014544410489336771}
   - component: {fileID: 2600426508515311430}
-  m_Layer: 0
+  - component: {fileID: -4787889600089653411}
+  m_Layer: 6
   m_Name: Tower_Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,3 +131,19 @@ MonoBehaviour:
   _range: 5
   _fireRate: 1
   _damage: 10
+  _maxLevel: 3
+  _baseUpgradeCost: 30
+  _damageIncreasePerLevel: 5
+  _fireRateIncreasePerLevel: 0.5
+--- !u!114 &-4787889600089653411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093622539639626414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d497f4210c7ae774e8e58869e07e9eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'

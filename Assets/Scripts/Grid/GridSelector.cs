@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GridSelector : MonoBehaviour
@@ -8,12 +8,14 @@ public class GridSelector : MonoBehaviour
     [SerializeField] private ResourceManager _resourceManager;
     [SerializeField] private int _towerCost = 25;
     [SerializeField] private ObjectPool _projectilePool;
+    [SerializeField] private LayerMask _towerLayer;
 
     private GridCell _currentCell;
 
     private void Update()
     {
         HandleMouseHover();
+        HandleTowerSelection();
         HandlePlacement();
     }
 
@@ -91,6 +93,31 @@ public class GridSelector : MonoBehaviour
         {
             _currentCell.Highlight(false);
             _currentCell = null;
+        }
+    }
+
+    private void HandleTowerSelection()
+    {
+        if (TowerSelectionUI.Instance != null && TowerSelectionUI.Instance.IsPanelOpen)
+            return;
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Ray ray = _camera.ScreenPointToRay(mousePosition);
+
+            // Try select tower
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, _towerLayer))
+            {
+                TowerBase tower = hit.collider.GetComponent<TowerBase>();
+                if (tower != null)
+                {
+                    TowerSelectionUI.Instance?.SelectTower(tower);
+                    return;
+                }
+            }
+
+            // If clicked but not on tower → deselect
+            TowerSelectionUI.Instance?.DeselectTower();
         }
     }
 }

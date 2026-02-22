@@ -12,6 +12,8 @@ public class TowerSelectionUI : MonoBehaviour
 
     private TowerBase _selectedTower;
 
+    public bool IsPanelOpen => _panel.activeSelf;
+
     private void Awake()
     {
         Instance = this;
@@ -49,5 +51,11 @@ public class TowerSelectionUI : MonoBehaviour
         _costText.text = _selectedTower.CanUpgrade
             ? $"Upgrade Cost: {_selectedTower.CurrentUpgradeCost}"
             : "Max Level";
+    }
+
+    public void DeselectTower()
+    {
+        _selectedTower = null;
+        _panel.SetActive(false);
     }
 }
