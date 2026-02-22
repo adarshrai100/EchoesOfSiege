@@ -12,6 +12,24 @@ public class TowerBase : MonoBehaviour
     private float _fireCooldown;
     private EnemyHealth _currentTarget;
 
+    [Header("Upgrade Settings")]
+    [SerializeField] private int _maxLevel = 3;
+    [SerializeField] private int _baseUpgradeCost = 30;
+    [SerializeField] private float _damageIncreasePerLevel = 5f;
+    [SerializeField] private float _fireRateIncreasePerLevel = 0.5f;
+
+    private int _currentLevel = 1;
+    private int _currentUpgradeCost;
+
+    public int CurrentLevel => _currentLevel;
+    public int CurrentUpgradeCost => _currentUpgradeCost;
+    public bool CanUpgrade => _currentLevel < _maxLevel;
+
+    private void Start()
+    {
+        _currentUpgradeCost = _baseUpgradeCost;
+    }
+
     private void Update()
     {
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
@@ -23,6 +41,14 @@ public class TowerBase : MonoBehaviour
     public void Initialize(ObjectPool projectilePool)
     {
         _projectilePool = projectilePool;
+    }
+
+    private void OnMouseDown()
+    {
+        if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
+            return;
+
+        TowerSelectionUI.Instance?.SelectTower(this);
     }
 
     private void HandleTargeting()
@@ -82,5 +108,17 @@ public class TowerBase : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _range);
+    }
+
+    public void Upgrade()
+    {
+        if (!CanUpgrade) return;
+
+        _currentLevel++;
+
+        _damage += _damageIncreasePerLevel;
+        _fireRate += _fireRateIncreasePerLevel;
+
+        _currentUpgradeCost += _baseUpgradeCost;
     }
 }
