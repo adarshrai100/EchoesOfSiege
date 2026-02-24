@@ -22,7 +22,13 @@ public class TowerSelectionUI : MonoBehaviour
 
     public void SelectTower(TowerBase tower)
     {
+        if (_selectedTower != null)
+            _selectedTower.SetSelected(false);
+
         _selectedTower = tower;
+
+        _selectedTower.SetSelected(true);
+
         _panel.SetActive(true);
         RefreshUI();
     }
@@ -55,6 +61,9 @@ public class TowerSelectionUI : MonoBehaviour
 
     public void DeselectTower()
     {
+        if (_selectedTower != null)
+            _selectedTower.SetSelected(false);
+
         _selectedTower = null;
         _panel.SetActive(false);
     }

@@ -25,9 +25,21 @@ public class TowerBase : MonoBehaviour
     public int CurrentUpgradeCost => _currentUpgradeCost;
     public bool CanUpgrade => _currentLevel < _maxLevel;
 
+    private Renderer _renderer;
+    private MaterialPropertyBlock _propertyBlock;
+
+    private static readonly Color _normalColor = Color.white;
+    private static readonly Color _selectedColor = new Color(0.6f, 1f, 0.6f);
+
     private void Start()
     {
         _currentUpgradeCost = _baseUpgradeCost;
+    }
+
+    private void Awake()
+    {
+        _renderer = GetComponentInChildren<Renderer>();
+        _propertyBlock = new MaterialPropertyBlock();
     }
 
     private void Update()
@@ -43,6 +55,14 @@ public class TowerBase : MonoBehaviour
         _projectilePool = projectilePool;
     }
 
+    public void SetSelected(bool selected)
+    {
+        if (_renderer == null) return;
+
+        _renderer.GetPropertyBlock(_propertyBlock);
+        _propertyBlock.SetColor("_BaseColor", selected ? _selectedColor : _normalColor);
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
 
     private void HandleTargeting()
     {

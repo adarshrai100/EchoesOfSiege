@@ -98,26 +98,25 @@ public class GridSelector : MonoBehaviour
 
     private void HandleTowerSelection()
     {
-        if (TowerSelectionUI.Instance != null && TowerSelectionUI.Instance.IsPanelOpen)
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = _camera.ScreenPointToRay(mousePosition);
+
+        // Raycast against everything
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = _camera.ScreenPointToRay(mousePosition);
+            TowerBase tower = hit.collider.GetComponent<TowerBase>();
 
-            // Try select tower
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, _towerLayer))
+            if (tower != null)
             {
-                TowerBase tower = hit.collider.GetComponent<TowerBase>();
-                if (tower != null)
-                {
-                    TowerSelectionUI.Instance?.SelectTower(tower);
-                    return;
-                }
+                TowerSelectionUI.Instance?.SelectTower(tower);
+                return;
             }
-
-            // If clicked but not on tower → deselect
-            TowerSelectionUI.Instance?.DeselectTower();
         }
+
+        // If we reached here → clicked something that's NOT a tower
+        TowerSelectionUI.Instance?.DeselectTower();
     }
 }
