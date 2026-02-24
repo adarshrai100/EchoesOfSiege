@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class GridSelector : MonoBehaviour
 {
@@ -57,6 +58,8 @@ public class GridSelector : MonoBehaviour
 
     private void HandlePlacement()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
         if (TowerSelectionUI.Instance != null && TowerSelectionUI.Instance.IsPanelOpen)
             return;
 
@@ -109,10 +112,13 @@ public class GridSelector : MonoBehaviour
         if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
 
+        // If clicking UI → do nothing
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Ray ray = _camera.ScreenPointToRay(mousePosition);
 
-        // Raycast against everything
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             TowerBase tower = hit.collider.GetComponent<TowerBase>();
@@ -124,7 +130,6 @@ public class GridSelector : MonoBehaviour
             }
         }
 
-        // If we reached here → clicked something that's NOT a tower
         TowerSelectionUI.Instance?.DeselectTower();
     }
 }
