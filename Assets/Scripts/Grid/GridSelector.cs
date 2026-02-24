@@ -21,6 +21,11 @@ public class GridSelector : MonoBehaviour
 
     private void HandleMouseHover()
     {
+        if (TowerSelectionUI.Instance != null && TowerSelectionUI.Instance.IsPanelOpen)
+        {
+            ClearCurrentCell();
+            return;
+        }
         if (Mouse.current == null) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
@@ -52,6 +57,9 @@ public class GridSelector : MonoBehaviour
 
     private void HandlePlacement()
     {
+        if (TowerSelectionUI.Instance != null && TowerSelectionUI.Instance.IsPanelOpen)
+            return;
+
         if (_currentCell == null) return;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
