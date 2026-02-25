@@ -33,6 +33,7 @@ public class Projectile : MonoBehaviour
 
         if (Vector3.Distance(transform.position, _target.transform.position) < 0.2f)
         {
+            AudioManager.Instance?.PlayHit();
             HitTarget();
         }
     }

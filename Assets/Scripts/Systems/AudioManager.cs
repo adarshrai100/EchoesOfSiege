@@ -40,6 +40,10 @@ public class AudioManager : MonoBehaviour
     private void Play(AudioClip clip, float volume)
     {
         if (clip != null)
+        {
+            _audioSource.pitch = Random.Range(0.95f, 1.05f);
             _audioSource.PlayOneShot(clip, volume * _masterVolume);
+            _audioSource.pitch = 1f;
+        }
     }
 }

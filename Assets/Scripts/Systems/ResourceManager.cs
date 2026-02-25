@@ -11,7 +11,7 @@ public class ResourceManager : MonoBehaviour
     private void Awake()
     {
         _currentMoney = _startingMoney;
-        Debug.Log("Starting Money: " + _currentMoney);
+       // Debug.Log("Starting Money: " + _currentMoney);
     }
 
     public bool CanAfford(int amount)
@@ -22,12 +22,12 @@ public class ResourceManager : MonoBehaviour
     public void Spend(int amount)
     {
         _currentMoney -= amount;
-        Debug.Log("Money After Spend: " + _currentMoney);
+       // Debug.Log("Money After Spend: " + _currentMoney);
     }
 
     public void Add(int amount)
     {
         _currentMoney += amount;
-        Debug.Log("Money After Reward: " + _currentMoney);
+        //Debug.Log("Money After Reward: " + _currentMoney);
     }
 }

@@ -8,6 +8,8 @@ public class GridSelector : MonoBehaviour
     [SerializeField] private GameObject _towerPrefab;
     [SerializeField] private ObjectPool _projectilePool;
     [SerializeField] private ResourceManager _resourceManager;
+    [SerializeField] private PathValidator _pathValidator;
+    [SerializeField] private GridManager _gridManager;
     [SerializeField] private int _towerCost = 50;
 
     private GridCell _currentCell;
@@ -40,7 +42,23 @@ public class GridSelector : MonoBehaviour
                 {
                     ClearCurrentCell();
                     _currentCell = cell;
-                    _currentCell.Highlight(true);
+                    if (!_currentCell.IsOccupied && _resourceManager.CanAfford(_towerCost))
+                    {
+                        _currentCell.SetOccupied(true);
+
+                        bool valid = _pathValidator.HasValidPath(
+                            _gridManager.Grid,
+                            _gridManager.Width,
+                            _gridManager.Height
+                        );
+
+                        _currentCell.SetOccupied(false);
+
+                        if (valid)
+                            _currentCell.ShowValidPreview();
+                        else
+                            _currentCell.ShowInvalidPreview();
+                    }
                 }
                 return;
             }
@@ -88,15 +106,43 @@ public class GridSelector : MonoBehaviour
         {
             if (!_currentCell.IsOccupied && _resourceManager.CanAfford(_towerCost))
             {
-                PlaceTower(_currentCell);
-                _resourceManager.Spend(_towerCost);
+                TryPlaceTower(_currentCell);
             }
+        }
+    }
+
+    private void TryPlaceTower(GridCell cell)
+    {
+        cell.SetOccupied(true);
+
+        bool valid = _pathValidator.HasValidPath(
+            _gridManager.Grid,
+            _gridManager.Width,
+            _gridManager.Height
+        );
+
+        if (valid)
+        {
+            PlaceTower(cell);
+            _resourceManager.Spend(_towerCost);
+        }
+        else
+        {
+            cell.SetOccupied(false);
+            Debug.Log("Path blocked! Cannot place tower.");
+        }
+        if (cell.GridPosition == _pathValidator.StartPosition ||
+    cell.GridPosition == _pathValidator.EndPosition)
+        {
+            Debug.Log("Cannot build on spawn or base cell.");
+            return;
         }
     }
 
     private void PlaceTower(GridCell cell)
     {
         GameObject tower = Instantiate(_towerPrefab);
+
         Renderer renderer = tower.GetComponentInChildren<Renderer>();
         float yOffset = renderer.bounds.extents.y;
 
@@ -113,7 +159,7 @@ public class GridSelector : MonoBehaviour
     {
         if (_currentCell != null)
         {
-            _currentCell.Highlight(false);
+            _currentCell.ResetColor();
             _currentCell = null;
         }
     }

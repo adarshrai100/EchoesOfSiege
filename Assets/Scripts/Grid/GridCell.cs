@@ -2,33 +2,48 @@ using UnityEngine;
 
 public class GridCell : MonoBehaviour
 {
-    public Vector2Int GridPosition { get; private set; }
-    public bool IsOccupied { get; private set; }
+    [SerializeField] private Renderer _renderer;
 
-    private Renderer _renderer;
     private Color _defaultColor;
+    private Color _validColor = new Color(0.7f, 1f, 0.7f);
+    private Color _invalidColor = new Color(1f, 0.4f, 0.4f);
+
+    public bool IsOccupied { get; private set; }
+    public bool IsWalkable { get; private set; } = true;
+
+    public Vector2Int GridPosition { get; private set; }
 
     private void Awake()
     {
-        _renderer = GetComponent<Renderer>();
+        if (_renderer == null)
+            _renderer = GetComponentInChildren<Renderer>();
+
         _defaultColor = _renderer.material.color;
     }
 
     public void Initialize(Vector2Int position)
     {
         GridPosition = position;
-        IsOccupied = false;
     }
 
     public void SetOccupied(bool occupied)
     {
         IsOccupied = occupied;
+        IsWalkable = !occupied;
     }
 
-    public void Highlight(bool state)
+    public void ShowValidPreview()
     {
-        if (_renderer == null) return;
+        _renderer.material.color = _validColor;
+    }
 
-        _renderer.material.SetColor("_BaseColor", state ? Color.green : _defaultColor);
+    public void ShowInvalidPreview()
+    {
+        _renderer.material.color = _invalidColor;
+    }
+
+    public void ResetColor()
+    {
+        _renderer.material.color = _defaultColor;
     }
 }

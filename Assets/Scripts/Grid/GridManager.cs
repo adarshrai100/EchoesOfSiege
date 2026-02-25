@@ -1,40 +1,35 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [Header("Grid Settings")]
-    [SerializeField] private int _width = 10;
-    [SerializeField] private int _height = 10;
-    [SerializeField] private float _cellSize = 2f;
     [SerializeField] private GridCell _cellPrefab;
+    [SerializeField] private int _width = 8;
+    [SerializeField] private int _height = 5;
+    [SerializeField] private float _cellSize = 1f;
 
-    private GridCell[,] _grid;
+    public GridCell[,] Grid { get; private set; }   // 👈 REQUIRED
+    public int Width => _width;                     // 👈 REQUIRED
+    public int Height => _height;                   // 👈 REQUIRED
 
-    private void Start()
+    private void Awake()
     {
         GenerateGrid();
     }
 
     private void GenerateGrid()
     {
-        _grid = new GridCell[_width, _height];
+        Grid = new GridCell[_width, _height];
 
         for (int x = 0; x < _width; x++)
         {
-            for (int z = 0; z < _height; z++)
+            for (int y = 0; y < _height; y++)
             {
-                float gridHalfHeight = _cellPrefab.transform.localScale.y / 2f;
-
-                Vector3 position = new Vector3(
-                    x * _cellSize,
-                    gridHalfHeight,
-                    z * _cellSize
-                );
+                Vector3 position = new Vector3(x * _cellSize, 0, y * _cellSize);
 
                 GridCell cell = Instantiate(_cellPrefab, position, Quaternion.identity, transform);
-                cell.Initialize(new Vector2Int(x, z));
+                cell.Initialize(new Vector2Int(x, y));
 
-                _grid[x, z] = cell;
+                Grid[x, y] = cell;
             }
         }
     }

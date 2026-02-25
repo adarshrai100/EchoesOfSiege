@@ -1874,6 +1874,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &877565171
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 877565172}
+  - component: {fileID: 877565173}
+  m_Layer: 0
+  m_Name: PathValidator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &877565172
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877565171}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1442291433}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &877565173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877565171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dcb15940b41cd44a8e10de62384a563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PathValidator
+  _startPosition: {x: 0, y: 5}
+  _endPosition: {x: 9, y: 5}
 --- !u!1 &882507314
 GameObject:
   m_ObjectHideFlags: 0
@@ -2855,6 +2901,8 @@ MonoBehaviour:
   _towerPrefab: {fileID: 2093622539639626414, guid: 02292c6171eb267459f723f665d75634, type: 3}
   _projectilePool: {fileID: 810524536}
   _resourceManager: {fileID: 1940048016}
+  _pathValidator: {fileID: 877565173}
+  _gridManager: {fileID: 1527162287}
   _towerCost: 25
 --- !u!1 &1442291432
 GameObject:
@@ -2895,6 +2943,7 @@ Transform:
   - {fileID: 698637205}
   - {fileID: 1285559622}
   - {fileID: 2033559245}
+  - {fileID: 877565172}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1527162285
@@ -2941,10 +2990,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6babffbf5d8cecf46bacc7c83e2aab6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
+  _cellPrefab: {fileID: 807761482314391700, guid: a7dc447e11f9a3641be9b80a16caf7a0, type: 3}
   _width: 10
   _height: 10
   _cellSize: 2
-  _cellPrefab: {fileID: 807761482314391700, guid: a7dc447e11f9a3641be9b80a16caf7a0, type: 3}
 --- !u!1 &1652177309
 GameObject:
   m_ObjectHideFlags: 0
@@ -3425,6 +3474,12 @@ MonoBehaviour:
   _upgradeClip: {fileID: 8300000, guid: f88f2e984c4e6c04299b81e63e61aef5, type: 3}
   _sellClip: {fileID: 8300000, guid: 6843d5bb95d2ea942b6eadd478a46782, type: 3}
   _gameOverClip: {fileID: 8300000, guid: 98f56364c39735c4393ea68d8f459ae0, type: 3}
+  _masterVolume: 1
+  _shootVolume: 0.2
+  _hitVolume: 0.2
+  _upgradeVolume: 0.7
+  _sellVolume: 0.7
+  _gameOverVolume: 0.8
 --- !u!1 &2083599737
 GameObject:
   m_ObjectHideFlags: 0
