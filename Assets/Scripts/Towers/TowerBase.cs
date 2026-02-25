@@ -7,23 +7,22 @@ public class TowerBase : MonoBehaviour
     [SerializeField] private float _fireRate = 1f;
     [SerializeField] private float _damage = 10f;
 
-    private ObjectPool _projectilePool;
-
-    private float _fireCooldown;
-    private EnemyHealth _currentTarget;
-
     [Header("Upgrade Settings")]
     [SerializeField] private int _maxLevel = 3;
     [SerializeField] private int _baseUpgradeCost = 30;
     [SerializeField] private float _damageIncreasePerLevel = 5f;
     [SerializeField] private float _fireRateIncreasePerLevel = 0.5f;
+    [SerializeField] private float _sellRefundPercent = 0.7f;
 
     private int _currentLevel = 1;
     private int _currentUpgradeCost;
+    private int _totalInvested;
 
-    public int CurrentLevel => _currentLevel;
-    public int CurrentUpgradeCost => _currentUpgradeCost;
-    public bool CanUpgrade => _currentLevel < _maxLevel;
+    private ObjectPool _projectilePool;
+    private GridCell _gridCell;
+
+    private float _fireCooldown;
+    private EnemyHealth _currentTarget;
 
     private Renderer _renderer;
     private MaterialPropertyBlock _propertyBlock;
@@ -31,10 +30,9 @@ public class TowerBase : MonoBehaviour
     private static readonly Color _normalColor = Color.white;
     private static readonly Color _selectedColor = new Color(0.6f, 1f, 0.6f);
 
-    private void Start()
-    {
-        _currentUpgradeCost = _baseUpgradeCost;
-    }
+    public int CurrentLevel => _currentLevel;
+    public int CurrentUpgradeCost => _currentUpgradeCost;
+    public bool CanUpgrade => _currentLevel < _maxLevel;
 
     private void Awake()
     {
@@ -42,31 +40,34 @@ public class TowerBase : MonoBehaviour
         _propertyBlock = new MaterialPropertyBlock();
     }
 
+    private void Start()
+    {
+        _currentUpgradeCost = _baseUpgradeCost;
+    }
+
+    public void Initialize(ObjectPool projectilePool, GridCell cell)
+    {
+        _projectilePool = projectilePool;
+        _gridCell = cell;
+        _totalInvested = 0;
+    }
+
+    public void RegisterInitialCost(int cost)
+    {
+        _totalInvested = cost;
+    }
+
     private void Update()
     {
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
             return;
+
         HandleTargeting();
         HandleAttack();
     }
 
-    public void Initialize(ObjectPool projectilePool)
-    {
-        _projectilePool = projectilePool;
-    }
-
-    public void SetSelected(bool selected)
-    {
-        if (_renderer == null) return;
-
-        _renderer.GetPropertyBlock(_propertyBlock);
-        _propertyBlock.SetColor("_BaseColor", selected ? _selectedColor : _normalColor);
-        _renderer.SetPropertyBlock(_propertyBlock);
-    }
-
     private void HandleTargeting()
     {
-        // Keep target if still valid
         if (_currentTarget != null && _currentTarget.gameObject.activeInHierarchy)
             return;
 
@@ -117,12 +118,6 @@ public class TowerBase : MonoBehaviour
         projectile.Initialize(_currentTarget, _damage, _projectilePool);
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _range);
-    }
-
     public void Upgrade()
     {
         if (!CanUpgrade) return;
@@ -132,6 +127,35 @@ public class TowerBase : MonoBehaviour
         _damage += _damageIncreasePerLevel;
         _fireRate += _fireRateIncreasePerLevel;
 
+        _totalInvested += _currentUpgradeCost;
         _currentUpgradeCost += _baseUpgradeCost;
+    }
+
+    public int GetSellValue()
+    {
+        return Mathf.RoundToInt(_totalInvested * _sellRefundPercent);
+    }
+
+    public void Sell()
+    {
+        if (_gridCell != null)
+            _gridCell.SetOccupied(false);
+
+        Destroy(gameObject);
+    }
+
+    public void SetSelected(bool selected)
+    {
+        if (_renderer == null) return;
+
+        _renderer.GetPropertyBlock(_propertyBlock);
+        _propertyBlock.SetColor("_BaseColor", selected ? _selectedColor : _normalColor);
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _range);
     }
 }

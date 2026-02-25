@@ -8,6 +8,7 @@ public class TowerSelectionUI : MonoBehaviour
     [SerializeField] private GameObject _panel;
     [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private TextMeshProUGUI _costText;
+    [SerializeField] private TextMeshProUGUI _sellValueText;
     [SerializeField] private ResourceManager _resourceManager;
 
     private TowerBase _selectedTower;
@@ -26,17 +27,24 @@ public class TowerSelectionUI : MonoBehaviour
             _selectedTower.SetSelected(false);
 
         _selectedTower = tower;
-
         _selectedTower.SetSelected(true);
 
         _panel.SetActive(true);
         RefreshUI();
     }
 
+    public void DeselectTower()
+    {
+        if (_selectedTower != null)
+            _selectedTower.SetSelected(false);
+
+        _selectedTower = null;
+        _panel.SetActive(false);
+    }
+
     public void OnUpgradeClicked()
     {
         if (_selectedTower == null) return;
-
         if (!_selectedTower.CanUpgrade) return;
 
         int cost = _selectedTower.CurrentUpgradeCost;
@@ -49,22 +57,27 @@ public class TowerSelectionUI : MonoBehaviour
         }
     }
 
+    public void OnSellClicked()
+    {
+        if (_selectedTower == null) return;
+
+        int refund = _selectedTower.GetSellValue();
+        _resourceManager.Add(refund);
+
+        _selectedTower.Sell();
+        DeselectTower();
+    }
+
     private void RefreshUI()
     {
         if (_selectedTower == null) return;
 
         _levelText.text = $"Level: {_selectedTower.CurrentLevel}";
+
         _costText.text = _selectedTower.CanUpgrade
             ? $"Upgrade Cost: {_selectedTower.CurrentUpgradeCost}"
             : "Max Level";
-    }
 
-    public void DeselectTower()
-    {
-        if (_selectedTower != null)
-            _selectedTower.SetSelected(false);
-
-        _selectedTower = null;
-        _panel.SetActive(false);
+        _sellValueText.text = $"Sell: {_selectedTower.GetSellValue()}";
     }
 }
