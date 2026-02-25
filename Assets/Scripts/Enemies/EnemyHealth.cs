@@ -25,7 +25,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public void TakeDamage(float amount)
     {
         _currentHealth -= amount;
-
+        AudioManager.Instance?.PlayHit();
         if (_currentHealth <= 0f)
         {
             Die();

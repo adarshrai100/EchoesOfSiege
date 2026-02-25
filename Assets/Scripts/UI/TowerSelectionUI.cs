@@ -54,6 +54,7 @@ public class TowerSelectionUI : MonoBehaviour
             _resourceManager.Spend(cost);
             _selectedTower.Upgrade();
             RefreshUI();
+            AudioManager.Instance?.PlayUpgrade();
         }
     }
 
@@ -66,6 +67,7 @@ public class TowerSelectionUI : MonoBehaviour
 
         _selectedTower.Sell();
         DeselectTower();
+        AudioManager.Instance?.PlaySell();
     }
 
     private void RefreshUI()

@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 
         IsGameOver = true;
         Debug.Log("Game Over Triggered");
+        AudioManager.Instance?.PlayGameOver();
 
         Time.timeScale = 0f;
     }

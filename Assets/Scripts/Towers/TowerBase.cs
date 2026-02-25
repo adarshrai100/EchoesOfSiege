@@ -116,6 +116,7 @@ public class TowerBase : MonoBehaviour
 
         Projectile projectile = obj.GetComponent<Projectile>();
         projectile.Initialize(_currentTarget, _damage, _projectilePool);
+        AudioManager.Instance?.PlayShoot();
     }
 
     public void Upgrade()
