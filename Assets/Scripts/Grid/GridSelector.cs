@@ -97,7 +97,10 @@ public class GridSelector : MonoBehaviour
     private void PlaceTower(GridCell cell)
     {
         GameObject tower = Instantiate(_towerPrefab);
-        tower.transform.position = cell.transform.position + Vector3.up * 0.5f;
+        Renderer renderer = tower.GetComponentInChildren<Renderer>();
+        float yOffset = renderer.bounds.extents.y;
+
+        tower.transform.position = cell.transform.position + Vector3.up * yOffset;
 
         TowerBase towerBase = tower.GetComponent<TowerBase>();
         towerBase.Initialize(_projectilePool, cell);
