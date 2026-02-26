@@ -167,28 +167,34 @@ public class TowerBase : MonoBehaviour
 
     private System.Collections.IEnumerator UpgradePunch()
     {
-        float duration = 0.15f;
+        float upDuration = 0.06f;
+        float downDuration = 0.14f;
+
+        Vector3 punchScale = _originalScale * 1.28f;
+
         float timer = 0f;
 
-        Vector3 punchScale = _originalScale * 1.15f;
-
-        // Scale up
-        while (timer < duration)
+        // Fast scale up
+        while (timer < upDuration)
         {
             timer += Time.deltaTime;
-            float t = timer / duration;
+            float t = timer / upDuration;
             transform.localScale = Vector3.Lerp(_originalScale, punchScale, t);
             yield return null;
         }
 
         timer = 0f;
 
-        // Scale back down
-        while (timer < duration)
+        // Slight bounce return
+        while (timer < downDuration)
         {
             timer += Time.deltaTime;
-            float t = timer / duration;
-            transform.localScale = Vector3.Lerp(punchScale, _originalScale, t);
+            float t = timer / downDuration;
+
+            // Ease out effect
+            float ease = 1f - Mathf.Pow(1f - t, 3f);
+            transform.localScale = Vector3.Lerp(punchScale, _originalScale, ease);
+
             yield return null;
         }
 
