@@ -34,10 +34,13 @@ public class TowerBase : MonoBehaviour
     public int CurrentUpgradeCost => _currentUpgradeCost;
     public bool CanUpgrade => _currentLevel < _maxLevel;
 
+    private Vector3 _originalScale;
+
     private void Awake()
     {
         _renderer = GetComponentInChildren<Renderer>();
         _propertyBlock = new MaterialPropertyBlock();
+        _originalScale = transform.localScale;
     }
 
     private void Start()
@@ -130,6 +133,8 @@ public class TowerBase : MonoBehaviour
 
         _totalInvested += _currentUpgradeCost;
         _currentUpgradeCost += _baseUpgradeCost;
+
+        StartCoroutine(UpgradePunch());
     }
 
     public int GetSellValue()
@@ -158,5 +163,35 @@ public class TowerBase : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _range);
+    }
+
+    private System.Collections.IEnumerator UpgradePunch()
+    {
+        float duration = 0.15f;
+        float timer = 0f;
+
+        Vector3 punchScale = _originalScale * 1.15f;
+
+        // Scale up
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+            transform.localScale = Vector3.Lerp(_originalScale, punchScale, t);
+            yield return null;
+        }
+
+        timer = 0f;
+
+        // Scale back down
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / duration;
+            transform.localScale = Vector3.Lerp(punchScale, _originalScale, t);
+            yield return null;
+        }
+
+        transform.localScale = _originalScale;
     }
 }

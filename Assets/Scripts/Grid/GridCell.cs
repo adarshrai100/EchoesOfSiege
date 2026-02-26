@@ -4,12 +4,15 @@ public class GridCell : MonoBehaviour
 {
     [SerializeField] private Renderer _renderer;
 
-    private Color _defaultColor;
-    private Color _validColor = new Color(0.7f, 1f, 0.7f);
-    private Color _invalidColor = new Color(1f, 0.4f, 0.4f);
+    private Color _baseColor;
+    private Color _normalColor = Color.white;
+    private Color _pathColor = new Color(0.85f, 0.85f, 0.85f);
+    private Color _highlightColor = new Color(0.7f, 1f, 0.7f);
+
+    private bool _isPathCell = false;
 
     public bool IsOccupied { get; private set; }
-    public bool IsWalkable { get; private set; } = true;
+    public bool IsPathCell => _isPathCell;
 
     public Vector2Int GridPosition { get; private set; }
 
@@ -18,7 +21,8 @@ public class GridCell : MonoBehaviour
         if (_renderer == null)
             _renderer = GetComponentInChildren<Renderer>();
 
-        _defaultColor = _renderer.material.color;
+        _baseColor = _normalColor;
+        _renderer.material.color = _baseColor;
     }
 
     public void Initialize(Vector2Int position)
@@ -29,21 +33,19 @@ public class GridCell : MonoBehaviour
     public void SetOccupied(bool occupied)
     {
         IsOccupied = occupied;
-        IsWalkable = !occupied;
     }
 
-    public void ShowValidPreview()
+    public void SetAsPathCell()
     {
-        _renderer.material.color = _validColor;
+        _isPathCell = true;
+        _baseColor = _pathColor;
+        _renderer.material.color = _baseColor;
     }
 
-    public void ShowInvalidPreview()
+    public void Highlight(bool state)
     {
-        _renderer.material.color = _invalidColor;
-    }
+        if (_renderer == null) return;
 
-    public void ResetColor()
-    {
-        _renderer.material.color = _defaultColor;
+        _renderer.material.color = state ? _highlightColor : _baseColor;
     }
 }

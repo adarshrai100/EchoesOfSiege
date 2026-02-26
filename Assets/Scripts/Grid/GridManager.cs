@@ -3,13 +3,11 @@
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private GridCell _cellPrefab;
-    [SerializeField] private int _width = 8;
-    [SerializeField] private int _height = 5;
-    [SerializeField] private float _cellSize = 1f;
+    [SerializeField] private int _width = 10;
+    [SerializeField] private int _height = 10;
+    [SerializeField] private float _cellSize = 2f;
 
-    public GridCell[,] Grid { get; private set; }   // 👈 REQUIRED
-    public int Width => _width;                     // 👈 REQUIRED
-    public int Height => _height;                   // 👈 REQUIRED
+    public GridCell[,] Grid { get; private set; }
 
     private void Awake()
     {
@@ -28,6 +26,12 @@ public class GridManager : MonoBehaviour
 
                 GridCell cell = Instantiate(_cellPrefab, position, Quaternion.identity, transform);
                 cell.Initialize(new Vector2Int(x, y));
+
+                // Mark middle row as path
+                if (y == 5)
+                {
+                    cell.SetAsPathCell();
+                }
 
                 Grid[x, y] = cell;
             }
