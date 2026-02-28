@@ -125,3 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb9214a8bcb040d46bc35dcec4627f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridCell
+  _renderer: {fileID: 7529341062201198165}
+  _normalMaterial: {fileID: 2100000, guid: eb7b168cde06fa04695a9acfec5f730b, type: 2}
+  _pathMaterial: {fileID: 2100000, guid: 2a2487564dc019d4db0ad527bf31aa27, type: 2}
+  _highlightMaterial: {fileID: 2100000, guid: 44d7d71a85cdc8344b58491226f08bf2, type: 2}

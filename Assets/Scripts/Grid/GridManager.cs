@@ -6,6 +6,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int _width = 10;
     [SerializeField] private int _height = 10;
     [SerializeField] private float _cellSize = 2f;
+    [SerializeField] private Material normalTileMaterial;
+    [SerializeField] private Material pathTileMaterial;
 
     public GridCell[,] Grid { get; private set; }
 

@@ -4,10 +4,9 @@ public class GridCell : MonoBehaviour
 {
     [SerializeField] private Renderer _renderer;
 
-    private Color _baseColor;
-    private Color _normalColor = Color.white;
-    private Color _pathColor = new Color(0.85f, 0.85f, 0.85f);
-    private Color _highlightColor = new Color(0.7f, 1f, 0.7f);
+    [SerializeField] private Material _normalMaterial;
+    [SerializeField] private Material _pathMaterial;
+    [SerializeField] private Material _highlightMaterial;
 
     private bool _isPathCell = false;
 
@@ -21,8 +20,7 @@ public class GridCell : MonoBehaviour
         if (_renderer == null)
             _renderer = GetComponentInChildren<Renderer>();
 
-        _baseColor = _normalColor;
-        _renderer.material.color = _baseColor;
+        _renderer.material = _normalMaterial;
     }
 
     public void Initialize(Vector2Int position)
@@ -38,14 +36,16 @@ public class GridCell : MonoBehaviour
     public void SetAsPathCell()
     {
         _isPathCell = true;
-        _baseColor = _pathColor;
-        _renderer.material.color = _baseColor;
+        _renderer.material = _pathMaterial;
     }
 
     public void Highlight(bool state)
     {
         if (_renderer == null) return;
 
-        _renderer.material.color = state ? _highlightColor : _baseColor;
+        if (state)
+            _renderer.material = _highlightMaterial;
+        else
+            _renderer.material = _isPathCell ? _pathMaterial : _normalMaterial;
     }
 }

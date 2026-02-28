@@ -2942,9 +2942,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
   _cellPrefab: {fileID: 807761482314391700, guid: a7dc447e11f9a3641be9b80a16caf7a0, type: 3}
-  _width: 10
-  _height: 10
+  _width: 11
+  _height: 11
   _cellSize: 2
+  normalTileMaterial: {fileID: 0}
+  pathTileMaterial: {fileID: 0}
 --- !u!1 &1652177309
 GameObject:
   m_ObjectHideFlags: 0
