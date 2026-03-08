@@ -10,6 +10,9 @@ public class GridSelector : MonoBehaviour
     [SerializeField] private ResourceManager _resourceManager;
     [SerializeField] private int _towerCost = 50;
 
+    [SerializeField] private Material _validPlacementMaterial;
+    [SerializeField] private Material _invalidPlacementMaterial;
+
     private GridCell _currentCell;
 
     private void Update()
@@ -43,7 +46,18 @@ public class GridSelector : MonoBehaviour
                 {
                     ClearCurrentCell();
                     _currentCell = cell;
-                    _currentCell.Highlight(true);
+                    bool canPlace = !_currentCell.IsOccupied && !_currentCell.IsPathCell && _resourceManager.CanAfford(_towerCost);
+
+                    Renderer renderer = _currentCell.GetComponentInChildren<Renderer>();
+
+                    if (canPlace)
+                    {
+                        renderer.material = _validPlacementMaterial;
+                    }
+                    else
+                    {
+                        renderer.material = _invalidPlacementMaterial;
+                    }
                 }
                 return;
             }
@@ -130,7 +144,7 @@ public class GridSelector : MonoBehaviour
     {
         if (_currentCell != null)
         {
-            _currentCell.Highlight(false);
+            _currentCell.SetVisualState(GridCell.CellVisualState.Normal);
             _currentCell = null;
         }
     }

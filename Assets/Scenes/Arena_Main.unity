@@ -2856,6 +2856,8 @@ MonoBehaviour:
   _projectilePool: {fileID: 810524536}
   _resourceManager: {fileID: 1940048016}
   _towerCost: 25
+  _validPlacementMaterial: {fileID: 0}
+  _invalidPlacementMaterial: {fileID: 0}
 --- !u!1 &1442291432
 GameObject:
   m_ObjectHideFlags: 0
@@ -2945,8 +2947,8 @@ MonoBehaviour:
   _width: 11
   _height: 11
   _cellSize: 2
-  normalTileMaterial: {fileID: 0}
-  pathTileMaterial: {fileID: 0}
+  normalTileMaterial: {fileID: 2100000, guid: eb7b168cde06fa04695a9acfec5f730b, type: 2}
+  pathTileMaterial: {fileID: 2100000, guid: 2a2487564dc019d4db0ad527bf31aa27, type: 2}
 --- !u!1 &1652177309
 GameObject:
   m_ObjectHideFlags: 0

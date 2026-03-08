@@ -39,13 +39,43 @@ public class GridCell : MonoBehaviour
         _renderer.material = _pathMaterial;
     }
 
-    public void Highlight(bool state)
+    public enum CellVisualState
+    {
+        Normal,
+        Hover,
+        Valid,
+        Invalid
+    }
+
+    public void SetVisualState(CellVisualState state)
     {
         if (_renderer == null) return;
 
-        if (state)
-            _renderer.material = _highlightMaterial;
-        else
-            _renderer.material = _isPathCell ? _pathMaterial : _normalMaterial;
+        switch (state)
+        {
+            case CellVisualState.Normal:
+                _renderer.material = _isPathCell ? _pathMaterial : _normalMaterial;
+                break;
+
+            case CellVisualState.Hover:
+                _renderer.material = _highlightMaterial;
+                break;
+
+            case CellVisualState.Valid:
+                ApplyTint(new Color32(80, 200, 120, 255)); // soft green
+                break;
+
+            case CellVisualState.Invalid:
+                ApplyTint(new Color32(220, 80, 80, 255)); // soft red
+                break;
+        }
+    }
+
+    private void ApplyTint(Color tint)
+    {
+        _renderer.material = _isPathCell ? _pathMaterial : _normalMaterial;
+
+        Color baseColor = _renderer.material.color;
+        _renderer.material.color = Color.Lerp(baseColor, tint, 0.6f);
     }
 }
