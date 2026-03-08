@@ -8,19 +8,27 @@ public class Projectile : MonoBehaviour
     private EnemyHealth _target;
     private float _damage;
     private ObjectPool _pool;
+    private TrailRenderer _trail;
 
     public void Initialize(EnemyHealth target, float damage, ObjectPool pool)
     {
         _target = target;
         _damage = damage;
         _pool = pool;
+
+        if (_trail != null)
+            _trail.Clear();
+    }
+
+
+    private void Awake()
+    {
+        _trail = GetComponent<TrailRenderer>();
     }
 
     private void OnEnable()
     {
-        TrailRenderer trail = GetComponent<TrailRenderer>();
-        if (trail != null)
-            trail.Clear();
+        _trail?.Clear();
     }
 
     private void Update()
@@ -57,6 +65,9 @@ public class Projectile : MonoBehaviour
                 Instantiate(_hitVFX, transform.position, Quaternion.identity);
             }
         }
+
+        if (_trail != null)
+            _trail.Clear();
 
         _pool.Return(gameObject);
     }
