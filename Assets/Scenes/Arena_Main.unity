@@ -2856,8 +2856,6 @@ MonoBehaviour:
   _projectilePool: {fileID: 810524536}
   _resourceManager: {fileID: 1940048016}
   _towerCost: 25
-  _validPlacementMaterial: {fileID: 0}
-  _invalidPlacementMaterial: {fileID: 0}
 --- !u!1 &1442291432
 GameObject:
   m_ObjectHideFlags: 0

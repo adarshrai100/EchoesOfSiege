@@ -10,10 +10,8 @@ public class GridSelector : MonoBehaviour
     [SerializeField] private ResourceManager _resourceManager;
     [SerializeField] private int _towerCost = 50;
 
-    [SerializeField] private Material _validPlacementMaterial;
-    [SerializeField] private Material _invalidPlacementMaterial;
-
     private GridCell _currentCell;
+    private GameObject _ghostTower;
 
     private void Update()
     {
@@ -46,19 +44,19 @@ public class GridSelector : MonoBehaviour
                 {
                     ClearCurrentCell();
                     _currentCell = cell;
-                    bool canPlace = !_currentCell.IsOccupied && !_currentCell.IsPathCell && _resourceManager.CanAfford(_towerCost);
-
-                    Renderer renderer = _currentCell.GetComponentInChildren<Renderer>();
-
-                    if (canPlace)
-                    {
-                        renderer.material = _validPlacementMaterial;
-                    }
-                    else
-                    {
-                        renderer.material = _invalidPlacementMaterial;
-                    }
                 }
+
+                bool canPlace = !_currentCell.IsOccupied &&
+                                !_currentCell.IsPathCell &&
+                                _resourceManager.CanAfford(_towerCost);
+
+                if (canPlace)
+                    _currentCell.SetVisualState(GridCell.CellVisualState.Valid);
+                else
+                    _currentCell.SetVisualState(GridCell.CellVisualState.Invalid);
+
+                UpdateGhostTower(cell, canPlace);
+
                 return;
             }
         }
@@ -110,7 +108,9 @@ public class GridSelector : MonoBehaviour
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (!_currentCell.IsOccupied && _resourceManager.CanAfford(_towerCost))
+            if (!_currentCell.IsOccupied &&
+                !_currentCell.IsPathCell &&
+                _resourceManager.CanAfford(_towerCost))
             {
                 PlaceTower(_currentCell);
                 _resourceManager.Spend(_towerCost);
@@ -118,14 +118,11 @@ public class GridSelector : MonoBehaviour
         }
     }
 
+    // =========================
+    // PLACE TOWER
+    // =========================
     private void PlaceTower(GridCell cell)
     {
-        if (cell.IsPathCell)
-        {
-            Debug.Log("Cannot build on enemy path.");
-            return;
-        }
-
         GameObject tower = Instantiate(_towerPrefab);
 
         Renderer renderer = tower.GetComponentInChildren<Renderer>();
@@ -140,12 +137,48 @@ public class GridSelector : MonoBehaviour
         cell.SetOccupied(true);
     }
 
+    // =========================
+    // GHOST TOWER SYSTEM
+    // =========================
+    private void UpdateGhostTower(GridCell cell, bool valid)
+    {
+        if (_ghostTower == null)
+        {
+            _ghostTower = Instantiate(_towerPrefab);
+
+            TowerBase towerBase = _ghostTower.GetComponent<TowerBase>();
+            if (towerBase != null)
+                towerBase.enabled = false;
+
+            Collider col = _ghostTower.GetComponentInChildren<Collider>();
+            if (col != null)
+                col.enabled = false;
+        }
+
+        Renderer renderer = _ghostTower.GetComponentInChildren<Renderer>();
+        float yOffset = renderer.bounds.extents.y;
+
+        _ghostTower.transform.position = cell.transform.position + Vector3.up * yOffset;
+
+        Color color = valid ? new Color(0.3f, 1f, 0.3f, 0.5f) : new Color(1f, 0.3f, 0.3f, 0.5f);
+        renderer.material.color = color;
+    }
+
+    // =========================
+    // CLEAR CELL
+    // =========================
     private void ClearCurrentCell()
     {
         if (_currentCell != null)
         {
             _currentCell.SetVisualState(GridCell.CellVisualState.Normal);
             _currentCell = null;
+        }
+
+        if (_ghostTower != null)
+        {
+            Destroy(_ghostTower);
+            _ghostTower = null;
         }
     }
 }
