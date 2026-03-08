@@ -3,6 +3,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private float _speed = 10f;
+    [SerializeField] private GameObject _hitVFX;
 
     private EnemyHealth _target;
     private float _damage;
@@ -13,6 +14,13 @@ public class Projectile : MonoBehaviour
         _target = target;
         _damage = damage;
         _pool = pool;
+    }
+
+    private void OnEnable()
+    {
+        TrailRenderer trail = GetComponent<TrailRenderer>();
+        if (trail != null)
+            trail.Clear();
     }
 
     private void Update()
@@ -43,6 +51,11 @@ public class Projectile : MonoBehaviour
         if (_target != null)
         {
             _target.TakeDamage(_damage);
+
+            if (_hitVFX != null)
+            {
+                Instantiate(_hitVFX, transform.position, Quaternion.identity);
+            }
         }
 
         _pool.Return(gameObject);
