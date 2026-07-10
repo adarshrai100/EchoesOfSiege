@@ -5,6 +5,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [Header("Health Settings")]
     [SerializeField] private float _maxHealth = 10f;
     [SerializeField] private int _reward = 10;
+    [SerializeField] private GameObject _deathVFX;
 
     private float _currentHealth;
 
@@ -15,6 +16,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private Renderer _renderer;
     private Material _material;
     private Color _originalColor;
+    private bool _isDying;
 
     private void Awake()
     {
@@ -25,7 +27,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     private void OnEnable()
     {
+        _isDying = false;
+
         transform.localScale = _originalScale;
+
         if (_material != null)
             _material.color = _originalColor;
     }
@@ -42,7 +47,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         if (_currentHealth <= 0f)
         {
-            Die();
+            if (!_isDying)
+            {
+                _isDying = true;
+                StartCoroutine(DeathSequence());
+            }
+
             return;
         }
 
@@ -53,14 +63,17 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _resourceManager?.Add(_reward);
 
+        if (_deathVFX != null)
+        {
+            Instantiate(_deathVFX, transform.position, Quaternion.identity);
+        }
+
+        transform.localScale = _originalScale;
+
         if (_enemyPool != null)
-        {
             _enemyPool.Return(gameObject);
-        }
         else
-        {
             gameObject.SetActive(false);
-        }
     }
 
     public void SetMaxHealth(float health)
@@ -108,5 +121,50 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
 
         transform.localScale = _originalScale;
+    }
+    private System.Collections.IEnumerator DeathSequence()
+    {
+        Vector3 startScale = transform.localScale;
+
+        Vector3 popScale = startScale * 1.15f;
+        Vector3 endScale = Vector3.zero;
+
+        float duration = 0.18f;
+        float timer = 0f;
+
+        // Pop slightly larger
+        while (timer < duration * 0.4f)
+        {
+            timer += Time.deltaTime;
+
+            transform.localScale = Vector3.Lerp(
+                startScale,
+                popScale,
+                timer / (duration * 0.4f));
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + Vector3.up * 0.25f;
+
+        // Shrink while floating upward
+        while (timer < duration * 0.6f)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / (duration * 0.6f);
+
+            transform.localScale = Vector3.Lerp(popScale, endScale, t);
+            transform.position = Vector3.Lerp(startPos, endPos, t);
+
+            yield return null;
+        }
+
+        transform.position = startPos;
+
+        Die();
     }
 }
