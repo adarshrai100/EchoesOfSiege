@@ -8,12 +8,16 @@ public class TowerVisualController : MonoBehaviour
     [Header("Projectile Spawn Points")]
     [SerializeField] private Transform[] _projectileSpawnPoints;
 
+    private Transform _visualRoot;
+
+    public Transform VisualRoot => _visualRoot;
     public Transform CurrentProjectileSpawn { get; private set; }
 
     private int _currentLevel;
 
     private void Awake()
     {
+        _visualRoot = transform.Find("Visual");
         SetLevel(0);
     }
 

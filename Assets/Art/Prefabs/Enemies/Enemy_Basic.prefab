@@ -146,6 +146,7 @@ MonoBehaviour:
   _maxHealth: 30
   _reward: 10
   _deathVFX: {fileID: 0}
+  _visualRoot: {fileID: 2863326464224928104}
 --- !u!1 &2737496151447090979
 GameObject:
   m_ObjectHideFlags: 0

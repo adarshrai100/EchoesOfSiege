@@ -34,13 +34,21 @@ public class TowerBase : MonoBehaviour
     public int CurrentUpgradeCost => _currentUpgradeCost;
     public bool CanUpgrade => _currentLevel < _maxLevel;
 
-    private Vector3 _originalScale;
+    private Vector3 _originalVisualScale;
+    private TowerVisualController _visualController;
 
     private void Awake()
     {
         _renderer = GetComponentInChildren<Renderer>();
         _propertyBlock = new MaterialPropertyBlock();
-        _originalScale = transform.localScale;
+
+        _visualController = GetComponent<TowerVisualController>();
+
+        if (_visualController != null &&
+            _visualController.VisualRoot != null)
+        {
+            _originalVisualScale = _visualController.VisualRoot.localScale;
+        }
     }
 
     private void Start()
@@ -112,13 +120,25 @@ public class TowerBase : MonoBehaviour
 
     private void FireProjectile()
     {
-        if (_projectilePool == null) return;
+        if (_projectilePool == null)
+            return;
 
         GameObject obj = _projectilePool.Get();
-        obj.transform.position = transform.position;
+
+        Transform spawnPoint = transform;
+
+        if (_visualController != null &&
+            _visualController.CurrentProjectileSpawn != null)
+        {
+            spawnPoint = _visualController.CurrentProjectileSpawn;
+        }
+
+        obj.transform.position = spawnPoint.position;
+        obj.transform.rotation = spawnPoint.rotation;
 
         Projectile projectile = obj.GetComponent<Projectile>();
         projectile.Initialize(_currentTarget, _damage, _projectilePool);
+
         AudioManager.Instance?.PlayShoot();
     }
 
@@ -135,6 +155,8 @@ public class TowerBase : MonoBehaviour
         _currentUpgradeCost += _baseUpgradeCost;
 
         StartCoroutine(UpgradePunch());
+
+        _visualController?.UpgradeVisual();
     }
 
     public int GetSellValue()
@@ -167,10 +189,15 @@ public class TowerBase : MonoBehaviour
 
     private System.Collections.IEnumerator UpgradePunch()
     {
+        if (_visualController == null || _visualController.VisualRoot == null)
+            yield break;
+
+        Transform visual = _visualController.VisualRoot;
+
         float upDuration = 0.06f;
         float downDuration = 0.14f;
 
-        Vector3 punchScale = _originalScale * 1.28f;
+        Vector3 punchScale = _originalVisualScale * 1.28f;
 
         float timer = 0f;
 
@@ -179,25 +206,27 @@ public class TowerBase : MonoBehaviour
         {
             timer += Time.deltaTime;
             float t = timer / upDuration;
-            transform.localScale = Vector3.Lerp(_originalScale, punchScale, t);
+
+            visual.localScale = Vector3.Lerp(_originalVisualScale, punchScale, t);
+
             yield return null;
         }
 
         timer = 0f;
 
-        // Slight bounce return
+        // Smooth bounce back
         while (timer < downDuration)
         {
             timer += Time.deltaTime;
             float t = timer / downDuration;
 
-            // Ease out effect
             float ease = 1f - Mathf.Pow(1f - t, 3f);
-            transform.localScale = Vector3.Lerp(punchScale, _originalScale, ease);
+
+            visual.localScale = Vector3.Lerp(punchScale, _originalVisualScale, ease);
 
             yield return null;
         }
 
-        transform.localScale = _originalScale;
+        visual.localScale = _originalVisualScale;
     }
 }

@@ -7,12 +7,14 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [SerializeField] private int _reward = 10;
     [SerializeField] private GameObject _deathVFX;
 
+    [SerializeField] private Transform _visualRoot;
+
     private float _currentHealth;
 
     private ResourceManager _resourceManager;
     private ObjectPool _enemyPool;
 
-    private Vector3 _originalScale;
+    private Vector3 _originalVisualScale;
     private Renderer _renderer;
     private Material _material;
     private Color _originalColor;
@@ -22,14 +24,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _renderer = GetComponentInChildren<Renderer>();
         _material = _renderer.material;
-        _originalScale = transform.localScale;
+        _originalVisualScale = _visualRoot.localScale;
+        _resourceManager = FindFirstObjectByType<ResourceManager>();
     }
 
     private void OnEnable()
     {
         _isDying = false;
 
-        transform.localScale = _originalScale;
+        _visualRoot.localScale = _originalVisualScale;
 
         if (_material != null)
             _material.color = _originalColor;
@@ -43,16 +46,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float amount)
     {
+        if (!gameObject.activeInHierarchy || _isDying)
+            return;
+
         _currentHealth -= amount;
 
         if (_currentHealth <= 0f)
         {
-            if (!_isDying)
-            {
-                _isDying = true;
-                StartCoroutine(DeathSequence());
-            }
-
+            _isDying = true;
+            StartCoroutine(DeathSequence());
             return;
         }
 
@@ -68,7 +70,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             Instantiate(_deathVFX, transform.position, Quaternion.identity);
         }
 
-        transform.localScale = _originalScale;
+        _visualRoot.localScale = _originalVisualScale;
 
         if (_enemyPool != null)
             _enemyPool.Return(gameObject);
@@ -86,15 +88,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         float duration = 0.05f;
         float timer = 0f;
 
-        Vector3 shrinkScale = _originalScale * 0.9f;
-        Vector3 overshootScale = _originalScale * 1.05f;
+        Vector3 shrinkScale = _originalVisualScale * 0.9f;
+        Vector3 overshootScale = _originalVisualScale * 1.05f;
 
         // Quick shrink
         while (timer < duration)
         {
             timer += Time.deltaTime;
             float t = timer / duration;
-            transform.localScale = Vector3.Lerp(_originalScale, shrinkScale, t);
+            _visualRoot.localScale = Vector3.Lerp(_originalVisualScale, shrinkScale, t);
             yield return null;
         }
 
@@ -105,7 +107,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             timer += Time.deltaTime;
             float t = timer / duration;
-            transform.localScale = Vector3.Lerp(shrinkScale, overshootScale, t);
+            _visualRoot.localScale = Vector3.Lerp(shrinkScale, overshootScale, t);
             yield return null;
         }
 
@@ -116,15 +118,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             timer += Time.deltaTime;
             float t = timer / duration;
-            transform.localScale = Vector3.Lerp(overshootScale, _originalScale, t);
+            _visualRoot.localScale = Vector3.Lerp(overshootScale, _originalVisualScale, t);
             yield return null;
         }
 
-        transform.localScale = _originalScale;
+        _visualRoot.localScale = _originalVisualScale;
     }
     private System.Collections.IEnumerator DeathSequence()
     {
-        Vector3 startScale = transform.localScale;
+        Vector3 startScale = _visualRoot.localScale;
 
         Vector3 popScale = startScale * 1.15f;
         Vector3 endScale = Vector3.zero;
@@ -137,7 +139,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             timer += Time.deltaTime;
 
-            transform.localScale = Vector3.Lerp(
+            _visualRoot.localScale = Vector3.Lerp(
                 startScale,
                 popScale,
                 timer / (duration * 0.4f));
@@ -157,7 +159,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
             float t = timer / (duration * 0.6f);
 
-            transform.localScale = Vector3.Lerp(popScale, endScale, t);
+            _visualRoot.localScale = Vector3.Lerp(popScale, endScale, t);
             transform.position = Vector3.Lerp(startPos, endPos, t);
 
             yield return null;
