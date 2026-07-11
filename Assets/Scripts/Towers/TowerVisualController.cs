@@ -11,13 +11,20 @@ public class TowerVisualController : MonoBehaviour
     private Transform _visualRoot;
 
     public Transform VisualRoot => _visualRoot;
+    public Transform CurrentVisual => _levelModels[_currentLevel].transform;
     public Transform CurrentProjectileSpawn { get; private set; }
 
     private int _currentLevel;
+    private Vector3 _originalScale;
+    private Vector3 _originalLocalPosition;
 
     private void Awake()
     {
         _visualRoot = transform.Find("Visual");
+
+        _originalScale = CurrentVisual.localScale;
+        _originalLocalPosition = CurrentVisual.localPosition;
+
         SetLevel(0);
     }
 
@@ -34,6 +41,8 @@ public class TowerVisualController : MonoBehaviour
         {
             CurrentProjectileSpawn = _projectileSpawnPoints[_currentLevel];
         }
+        _originalScale = CurrentVisual.localScale;
+        _originalLocalPosition = CurrentVisual.localPosition;
     }
 
     public void UpgradeVisual()
@@ -59,5 +68,56 @@ public class TowerVisualController : MonoBehaviour
             _visualRoot.rotation,
             targetRotation,
             rotationSpeed * Time.deltaTime);
+    }
+
+    public void PlayUpgradeAnimation(MonoBehaviour owner)
+    {
+        owner.StartCoroutine(UpgradePunch());
+    }
+
+    private System.Collections.IEnumerator UpgradePunch()
+    {
+        Transform visual = CurrentVisual;
+
+        float upDuration = 0.06f;
+        float downDuration = 0.14f;
+
+        Vector3 punchScale = _originalScale * 1.28f;
+
+        float timer = 0f;
+
+        while (timer < upDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / upDuration;
+
+            visual.localScale = Vector3.Lerp(
+                _originalScale,
+                punchScale,
+                t);
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        while (timer < downDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / downDuration;
+
+            float ease = 1f - Mathf.Pow(1f - t, 3f);
+
+            visual.localScale = Vector3.Lerp(
+                punchScale,
+                _originalScale,
+                ease);
+
+            yield return null;
+        }
+
+        visual.localScale = _originalScale;
     }
 }

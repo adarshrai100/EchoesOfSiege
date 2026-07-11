@@ -62,6 +62,8 @@ public class TowerBase : MonoBehaviour
         _projectilePool = projectilePool;
         _gridCell = cell;
         _totalInvested = 0;
+
+        StartCoroutine(BuildAnimation());
     }
 
     public void RegisterInitialCost(int cost)
@@ -158,7 +160,7 @@ public class TowerBase : MonoBehaviour
         _totalInvested += _currentUpgradeCost;
         _currentUpgradeCost += _baseUpgradeCost;
 
-        StartCoroutine(UpgradePunch());
+        _visualController?.PlayUpgradeAnimation(this);
 
         _visualController?.UpgradeVisual();
     }
@@ -191,48 +193,7 @@ public class TowerBase : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, _range);
     }
 
-    private System.Collections.IEnumerator UpgradePunch()
-    {
-        if (_visualController == null || _visualController.VisualRoot == null)
-            yield break;
-
-        Transform visual = _visualController.VisualRoot;
-
-        float upDuration = 0.06f;
-        float downDuration = 0.14f;
-
-        Vector3 punchScale = _originalVisualScale * 1.28f;
-
-        float timer = 0f;
-
-        // Fast scale up
-        while (timer < upDuration)
-        {
-            timer += Time.deltaTime;
-            float t = timer / upDuration;
-
-            visual.localScale = Vector3.Lerp(_originalVisualScale, punchScale, t);
-
-            yield return null;
-        }
-
-        timer = 0f;
-
-        // Smooth bounce back
-        while (timer < downDuration)
-        {
-            timer += Time.deltaTime;
-            float t = timer / downDuration;
-
-            float ease = 1f - Mathf.Pow(1f - t, 3f);
-
-            visual.localScale = Vector3.Lerp(punchScale, _originalVisualScale, ease);
-
-            yield return null;
-        }
-
-        visual.localScale = _originalVisualScale;
-    }
+    
 
     private void HandleRotation()
     {
@@ -242,5 +203,47 @@ public class TowerBase : MonoBehaviour
         _visualController?.RotateTowards(
             _currentTarget.transform.position,
             _rotationSpeed);
+    }
+
+    private System.Collections.IEnumerator BuildAnimation()
+    {
+        if (_visualController == null || _visualController.VisualRoot == null)
+            yield break;
+
+        Transform visual = _visualController.VisualRoot;
+
+        Vector3 finalPos = visual.localPosition;
+        Vector3 finalScale = visual.localScale;
+
+        visual.localPosition = finalPos + Vector3.down * 1f;
+        visual.localScale = Vector3.zero;
+
+        float duration = 0.35f;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            // Smooth ease-out
+            float ease = 1f - Mathf.Pow(1f - t, 3f);
+
+            visual.localPosition = Vector3.Lerp(
+                finalPos + Vector3.down,
+                finalPos,
+                ease);
+
+            visual.localScale = Vector3.Lerp(
+                Vector3.zero,
+                finalScale,
+                ease);
+
+            yield return null;
+        }
+
+        visual.localPosition = finalPos;
+        visual.localScale = finalScale;
     }
 }
