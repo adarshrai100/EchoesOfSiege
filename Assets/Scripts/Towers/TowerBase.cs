@@ -6,6 +6,7 @@ public class TowerBase : MonoBehaviour
     [SerializeField] private float _range = 5f;
     [SerializeField] private float _fireRate = 1f;
     [SerializeField] private float _damage = 10f;
+    [SerializeField] private float _rotationSpeed = 10f;
 
     [Header("Upgrade Settings")]
     [SerializeField] private int _maxLevel = 3;
@@ -74,6 +75,9 @@ public class TowerBase : MonoBehaviour
             return;
 
         HandleTargeting();
+
+        HandleRotation();
+
         HandleAttack();
     }
 
@@ -228,5 +232,15 @@ public class TowerBase : MonoBehaviour
         }
 
         visual.localScale = _originalVisualScale;
+    }
+
+    private void HandleRotation()
+    {
+        if (_currentTarget == null)
+            return;
+
+        _visualController?.RotateTowards(
+            _currentTarget.transform.position,
+            _rotationSpeed);
     }
 }

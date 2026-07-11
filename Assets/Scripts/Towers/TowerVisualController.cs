@@ -40,4 +40,24 @@ public class TowerVisualController : MonoBehaviour
     {
         SetLevel(_currentLevel + 1);
     }
+
+    public void RotateTowards(Vector3 worldPosition, float rotationSpeed)
+    {
+        if (_visualRoot == null)
+            return;
+
+        Vector3 direction = worldPosition - _visualRoot.position;
+
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude < 0.001f)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        _visualRoot.rotation = Quaternion.Slerp(
+            _visualRoot.rotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime);
+    }
 }
