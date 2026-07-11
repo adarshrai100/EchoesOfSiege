@@ -18,6 +18,9 @@ public class TowerBase : MonoBehaviour
     private int _currentLevel = 1;
     private int _currentUpgradeCost;
     private int _totalInvested;
+    public float Damage => _damage;
+    public float Range => _range;
+    public float FireRate => _fireRate;
 
     private ObjectPool _projectilePool;
     private GridCell _gridCell;
