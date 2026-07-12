@@ -41,9 +41,18 @@ public class WaveManager : MonoBehaviour
         {
             yield return new WaitForSeconds(_timeBetweenWaves);
 
-            if (GameManager.Instance.IsGameOver) yield break;
+            if (GameManager.Instance.IsGameOver)
+                yield break;
 
             _currentWave++;
+
+            // Show the wave banner
+            WaveBannerUI.Instance?.ShowWave(_currentWave);
+
+            // Give the player time to read it
+            yield return new WaitForSeconds(1.5f);
+
+            // Spawn enemies
             yield return StartCoroutine(SpawnWave());
         }
     }

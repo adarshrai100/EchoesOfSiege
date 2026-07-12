@@ -65,6 +65,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _resourceManager?.Add(_reward);
 
+        FloatingTextManager.Instance?.ShowReward(
+        transform.position + Vector3.up * 2f,
+        _reward);
+
         if (_deathVFX != null)
         {
             Instantiate(_deathVFX, transform.position, Quaternion.identity);
