@@ -17,10 +17,12 @@ public class TowerVisualController : MonoBehaviour
     private int _currentLevel;
     private Vector3 _originalScale;
     private Vector3 _originalLocalPosition;
+    private Vector3 _visualOriginalLocalPosition;
 
     private void Awake()
     {
         _visualRoot = transform.Find("Visual");
+        _visualOriginalLocalPosition = _visualRoot.localPosition;
 
         _originalScale = CurrentVisual.localScale;
         _originalLocalPosition = CurrentVisual.localPosition;
@@ -119,5 +121,69 @@ public class TowerVisualController : MonoBehaviour
         }
 
         visual.localScale = _originalScale;
+    }
+
+    public void PlayBuildAnimation(MonoBehaviour owner)
+    {
+        owner.StartCoroutine(BuildAnimation());
+    }
+
+    private System.Collections.IEnumerator BuildAnimation()
+    {
+        Renderer renderer = CurrentVisual.GetComponentInChildren<Renderer>();
+
+        float buildHeight = renderer != null
+            ? renderer.bounds.size.y
+            : 2f;
+
+        Vector3 startPos = _visualOriginalLocalPosition + Vector3.down * buildHeight;
+        Vector3 overshootPos = _visualOriginalLocalPosition + Vector3.up * 0.12f;
+
+        _visualRoot.localPosition = startPos;
+
+        // Slight squash while underground
+        _visualRoot.localScale = Vector3.one * 0.92f;
+
+        float riseDuration = 0.55f;
+        float settleDuration = 0.18f;
+
+        float timer = 0f;
+
+        // Rise
+        while (timer < riseDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / riseDuration;
+
+            // Smooth ease-out
+            float ease = 1f - Mathf.Pow(1f - t, 3f);
+
+            _visualRoot.localPosition =
+                Vector3.Lerp(startPos, overshootPos, ease);
+
+            yield return null;
+        }
+
+        timer = 0f;
+
+        // Settle + unsquash
+        while (timer < settleDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / settleDuration;
+
+            _visualRoot.localPosition =
+                Vector3.Lerp(overshootPos, _visualOriginalLocalPosition, t);
+
+            _visualRoot.localScale =
+                Vector3.Lerp(Vector3.one * 0.92f, Vector3.one, t);
+
+            yield return null;
+        }
+
+        _visualRoot.localPosition = _visualOriginalLocalPosition;
+        _visualRoot.localScale = Vector3.one;
     }
 }

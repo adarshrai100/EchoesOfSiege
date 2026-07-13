@@ -134,6 +134,14 @@ public class GridSelector : MonoBehaviour
         towerBase.Initialize(_projectilePool, cell);
         towerBase.RegisterInitialCost(_towerCost);
 
+        TowerVisualController visual =
+        tower.GetComponent<TowerVisualController>();
+
+        if (visual != null)
+        {
+            visual.PlayBuildAnimation(this);
+        }
+
         cell.SetOccupied(true);
     }
 
