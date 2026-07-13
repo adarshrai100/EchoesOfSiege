@@ -5,7 +5,10 @@ using UnityEngine.EventSystems;
 public class GridSelector : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
-    [SerializeField] private GameObject _towerPrefab;
+    [SerializeField] private GameObject _archerTowerPrefab;
+    [SerializeField] private GameObject _cannonTowerPrefab;
+
+    private GameObject _selectedTowerPrefab;
     [SerializeField] private ObjectPool _projectilePool;
     [SerializeField] private ResourceManager _resourceManager;
     [SerializeField] private int _towerCost = 50;
@@ -13,8 +16,39 @@ public class GridSelector : MonoBehaviour
     private GridCell _currentCell;
     private GameObject _ghostTower;
 
+    private void Start()
+    {
+        _selectedTowerPrefab = _archerTowerPrefab;
+    }
+
     private void Update()
     {
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            _selectedTowerPrefab = _archerTowerPrefab;
+
+            if (_ghostTower != null)
+            {
+                Destroy(_ghostTower);
+                _ghostTower = null;
+            }
+
+            Debug.Log("Selected Archer Tower");
+        }
+
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            _selectedTowerPrefab = _cannonTowerPrefab;
+
+            if (_ghostTower != null)
+            {
+                Destroy(_ghostTower);
+                _ghostTower = null;
+            }
+
+            Debug.Log("Selected Cannon Tower");
+        }
+
         HandleMouseHover();
         HandleTowerSelection();
         HandlePlacement();
@@ -123,7 +157,7 @@ public class GridSelector : MonoBehaviour
     // =========================
     private void PlaceTower(GridCell cell)
     {
-        GameObject tower = Instantiate(_towerPrefab);
+        GameObject tower = Instantiate(_selectedTowerPrefab);
 
         Renderer renderer = tower.GetComponentInChildren<Renderer>();
         float yOffset = renderer.bounds.extents.y;
@@ -152,7 +186,7 @@ public class GridSelector : MonoBehaviour
     {
         if (_ghostTower == null)
         {
-            _ghostTower = Instantiate(_towerPrefab);
+            _ghostTower = Instantiate(_selectedTowerPrefab);
 
             TowerBase towerBase = _ghostTower.GetComponent<TowerBase>();
             if (towerBase != null)

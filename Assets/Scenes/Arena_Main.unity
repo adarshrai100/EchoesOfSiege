@@ -5813,7 +5813,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridSelector
   _camera: {fileID: 330585545}
-  _towerPrefab: {fileID: 2093622539639626414, guid: 02292c6171eb267459f723f665d75634, type: 3}
+  _archerTowerPrefab: {fileID: 2093622539639626414, guid: 02292c6171eb267459f723f665d75634, type: 3}
+  _cannonTowerPrefab: {fileID: 2093622539639626414, guid: 2e9d21efbda52bf4f9f1e3affc4199ed, type: 3}
   _projectilePool: {fileID: 810524536}
   _resourceManager: {fileID: 1940048016}
   _towerCost: 25

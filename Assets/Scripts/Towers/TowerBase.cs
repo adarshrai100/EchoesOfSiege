@@ -15,6 +15,11 @@ public class TowerBase : MonoBehaviour
     [SerializeField] private float _fireRateIncreasePerLevel = 0.5f;
     [SerializeField] private float _sellRefundPercent = 0.7f;
 
+    [SerializeField]
+    private TowerType _towerType;
+
+    public TowerType TowerType => _towerType;
+
     private int _currentLevel = 1;
     private int _currentUpgradeCost;
     private int _totalInvested;
@@ -66,7 +71,6 @@ public class TowerBase : MonoBehaviour
         _gridCell = cell;
         _totalInvested = 0;
 
-        StartCoroutine(BuildAnimation());
     }
 
     public void RegisterInitialCost(int cost)
@@ -208,45 +212,4 @@ public class TowerBase : MonoBehaviour
             _rotationSpeed);
     }
 
-    private System.Collections.IEnumerator BuildAnimation()
-    {
-        if (_visualController == null || _visualController.VisualRoot == null)
-            yield break;
-
-        Transform visual = _visualController.VisualRoot;
-
-        Vector3 finalPos = visual.localPosition;
-        Vector3 finalScale = visual.localScale;
-
-        visual.localPosition = finalPos + Vector3.down * 1f;
-        visual.localScale = Vector3.zero;
-
-        float duration = 0.35f;
-        float timer = 0f;
-
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-
-            float t = timer / duration;
-
-            // Smooth ease-out
-            float ease = 1f - Mathf.Pow(1f - t, 3f);
-
-            visual.localPosition = Vector3.Lerp(
-                finalPos + Vector3.down,
-                finalPos,
-                ease);
-
-            visual.localScale = Vector3.Lerp(
-                Vector3.zero,
-                finalScale,
-                ease);
-
-            yield return null;
-        }
-
-        visual.localPosition = finalPos;
-        visual.localScale = finalScale;
-    }
 }
