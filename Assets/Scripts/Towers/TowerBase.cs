@@ -27,7 +27,6 @@ public class TowerBase : MonoBehaviour
     public float Range => _range;
     public float FireRate => _fireRate;
 
-    [SerializeField]
     private ObjectPool _projectilePool;
     private GridCell _gridCell;
 
@@ -66,8 +65,9 @@ public class TowerBase : MonoBehaviour
         _currentUpgradeCost = _baseUpgradeCost;
     }
 
-    public void Initialize(GridCell cell)
+    public void Initialize(ObjectPool projectilePool, GridCell cell)
     {
+        _projectilePool = projectilePool;
         _gridCell = cell;
         _totalInvested = 0;
     }

@@ -165,7 +165,7 @@ public class GridSelector : MonoBehaviour
         tower.transform.position = cell.transform.position + Vector3.up * yOffset;
 
         TowerBase towerBase = tower.GetComponent<TowerBase>();
-        towerBase.Initialize(cell);
+        towerBase.Initialize(_projectilePool, cell);
         towerBase.RegisterInitialCost(_towerCost);
 
         TowerVisualController visual =
@@ -216,6 +216,28 @@ public class GridSelector : MonoBehaviour
             _currentCell.SetVisualState(GridCell.CellVisualState.Normal);
             _currentCell = null;
         }
+
+        if (_ghostTower != null)
+        {
+            Destroy(_ghostTower);
+            _ghostTower = null;
+        }
+    }
+
+    public void SelectArcherTower()
+    {
+        _selectedTowerPrefab = _archerTowerPrefab;
+
+        if (_ghostTower != null)
+        {
+            Destroy(_ghostTower);
+            _ghostTower = null;
+        }
+    }
+
+    public void SelectBallistaTower()
+    {
+        _selectedTowerPrefab = _cannonTowerPrefab;
 
         if (_ghostTower != null)
         {
