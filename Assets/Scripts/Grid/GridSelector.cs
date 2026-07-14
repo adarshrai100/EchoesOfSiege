@@ -165,7 +165,7 @@ public class GridSelector : MonoBehaviour
         tower.transform.position = cell.transform.position + Vector3.up * yOffset;
 
         TowerBase towerBase = tower.GetComponent<TowerBase>();
-        towerBase.Initialize(_projectilePool, cell);
+        towerBase.Initialize(cell);
         towerBase.RegisterInitialCost(_towerCost);
 
         TowerVisualController visual =
