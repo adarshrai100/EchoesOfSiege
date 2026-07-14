@@ -23,32 +23,6 @@ public class GridSelector : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)
-        {
-            _selectedTowerPrefab = _archerTowerPrefab;
-
-            if (_ghostTower != null)
-            {
-                Destroy(_ghostTower);
-                _ghostTower = null;
-            }
-
-            Debug.Log("Selected Archer Tower");
-        }
-
-        if (Keyboard.current.digit2Key.wasPressedThisFrame)
-        {
-            _selectedTowerPrefab = _cannonTowerPrefab;
-
-            if (_ghostTower != null)
-            {
-                Destroy(_ghostTower);
-                _ghostTower = null;
-            }
-
-            Debug.Log("Selected Cannon Tower");
-        }
-
         HandleMouseHover();
         HandleTowerSelection();
         HandlePlacement();
