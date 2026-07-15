@@ -8,6 +8,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private float _cellSize = 2f;
     [SerializeField] private Material normalTileMaterial;
     [SerializeField] private Material pathTileMaterial;
+    [SerializeField] private int _pathEndX = 7;
 
     public GridCell[,] Grid { get; private set; }
 
@@ -30,7 +31,7 @@ public class GridManager : MonoBehaviour
                 cell.Initialize(new Vector2Int(x, y));
 
                 // Mark middle row as path
-                if (y == 5)
+                if (y == 5 && x >= _pathEndX)
                 {
                     cell.SetAsPathCell();
                 }
