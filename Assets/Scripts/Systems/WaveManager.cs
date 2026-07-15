@@ -6,7 +6,9 @@ public class WaveManager : MonoBehaviour
     [Header("Core References")]
     [SerializeField] private PathManager _pathManager;
     [SerializeField] private BaseHealth _baseHealth;
-    [SerializeField] private ObjectPool _enemyPool;
+    [SerializeField] private ObjectPool _basicEnemyPool;
+    [SerializeField] private ObjectPool _fastEnemyPool;
+    [SerializeField] private ObjectPool _tankEnemyPool;
 
     [Header("Wave Timing")]
     [SerializeField] private float _spawnInterval = 1f;
@@ -70,17 +72,34 @@ public class WaveManager : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        GameObject obj = _enemyPool.Get();
+        EnemyType type = GetRandomEnemyType();
+
+        ObjectPool pool = null;
+
+        switch (type)
+        {
+            case EnemyType.Basic:
+                pool = _basicEnemyPool;
+                break;
+
+            case EnemyType.Fast:
+                pool = _fastEnemyPool;
+                break;
+
+            case EnemyType.Tank:
+                pool = _tankEnemyPool;
+                break;
+        }
+
+        GameObject obj = pool.Get();
 
         EnemyMovement movement = obj.GetComponent<EnemyMovement>();
         EnemyHealth health = obj.GetComponent<EnemyHealth>();
 
-        EnemyType type = GetRandomEnemyType();
-
         ConfigureEnemy(type, movement, health);
 
-        movement.Initialize(_pathManager, _baseHealth, _enemyPool);
-        health.Initialize(_enemyPool);
+        movement.Initialize(_pathManager, _baseHealth, pool);
+        health.Initialize(pool);
     }
 
     private EnemyType GetRandomEnemyType()
