@@ -3,13 +3,26 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
+    [Header("Music")]
+
+    [SerializeField] private AudioClip _gameplayMusic;
+
+    [SerializeField] private float _musicVolume = 0.5f;
+
+    private AudioSource _musicSource;
 
     [Header("Audio Clips")]
-    [SerializeField] private AudioClip _shootClip;
-    [SerializeField] private AudioClip _hitClip;
+    [SerializeField] private AudioClip _archerShootClip;
+    [SerializeField] private AudioClip _ballistaShootClip;
+    [SerializeField] private AudioClip _enemyHitClip;
+    [SerializeField] private AudioClip _enemyDeathClip;
+    [SerializeField] private AudioClip _castleHitClip;
+    [SerializeField] private AudioClip _waveStartClip;
     [SerializeField] private AudioClip _upgradeClip;
     [SerializeField] private AudioClip _sellClip;
     [SerializeField] private AudioClip _gameOverClip;
+
+
 
     [SerializeField] private float _masterVolume = 1f;
 
@@ -29,13 +42,34 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
 
         _audioSource = gameObject.AddComponent<AudioSource>();
+
+        _musicSource = gameObject.AddComponent<AudioSource>();
+
+        _musicSource.loop = true;
+        _musicSource.playOnAwake = false;
+        _musicSource.volume = _musicVolume * _masterVolume;
     }
 
-    public void PlayShoot() => Play(_shootClip, _shootVolume);
-    public void PlayHit() => Play(_hitClip, _hitVolume);
+    public void PlayArcherShoot() => Play(_archerShootClip, _shootVolume);
+
+    public void PlayBallistaShoot() => Play(_ballistaShootClip, _shootVolume);
+
+    public void PlayEnemyHit() => Play(_enemyHitClip, _hitVolume);
+
+    public void PlayEnemyDeath() => Play(_enemyDeathClip, _hitVolume);
+
+    public void PlayCastleHit() => Play(_castleHitClip, _hitVolume);
+
+    public void PlayWaveStart() => Play(_waveStartClip, _upgradeVolume);
+
     public void PlayUpgrade() => Play(_upgradeClip, _upgradeVolume);
+
     public void PlaySell() => Play(_sellClip, _sellVolume);
+
     public void PlayGameOver() => Play(_gameOverClip, _gameOverVolume);
+
+    public void PlayShoot() => PlayArcherShoot();
+    public void PlayHit() => PlayEnemyHit();
 
     private void Play(AudioClip clip, float volume)
     {
@@ -45,5 +79,22 @@ public class AudioManager : MonoBehaviour
             _audioSource.PlayOneShot(clip, volume * _masterVolume);
             _audioSource.pitch = 1f;
         }
+    }
+
+    public void PlayGameplayMusic()
+    {
+        if (_gameplayMusic == null)
+            return;
+
+        if (_musicSource.isPlaying)
+            return;
+
+        _musicSource.clip = _gameplayMusic;
+        _musicSource.Play();
+    }
+
+    public void StopMusic()
+    {
+        _musicSource.Stop();
     }
 }

@@ -46,6 +46,8 @@ public class TowerBase : MonoBehaviour
     private Vector3 _originalVisualScale;
     private TowerVisualController _visualController;
 
+    [SerializeField] private bool _useBallistaShootSound = false;
+
     private void Awake()
     {
         _renderer = GetComponentInChildren<Renderer>();
@@ -151,7 +153,14 @@ public class TowerBase : MonoBehaviour
         Projectile projectile = obj.GetComponent<Projectile>();
         projectile.Initialize(_currentTarget, _damage, _projectilePool);
 
-        AudioManager.Instance?.PlayShoot();
+        if (_useBallistaShootSound)
+        {
+            AudioManager.Instance?.PlayBallistaShoot();
+        }
+        else
+        {
+            AudioManager.Instance?.PlayArcherShoot();
+        }
     }
 
     public void Upgrade()
@@ -211,4 +220,8 @@ public class TowerBase : MonoBehaviour
             _rotationSpeed);
     }
 
+    protected virtual void PlayShootSound()
+    {
+        AudioManager.Instance?.PlayArcherShoot();
+    }
 }

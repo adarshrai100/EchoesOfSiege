@@ -47,7 +47,7 @@ public class WaveManager : MonoBehaviour
                 yield break;
 
             _currentWave++;
-
+            AudioManager.Instance?.PlayWaveStart();
             // Show the wave banner
             WaveBannerUI.Instance?.ShowWave(_currentWave);
 

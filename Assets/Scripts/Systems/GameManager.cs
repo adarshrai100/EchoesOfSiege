@@ -17,12 +17,20 @@ public class GameManager : MonoBehaviour
         IsGameOver = false;
     }
 
+    private void Start()
+    {
+        AudioManager.Instance?.PlayGameplayMusic();
+    }
+
     public void TriggerGameOver()
     {
         if (IsGameOver) return;
 
         IsGameOver = true;
         Debug.Log("Game Over Triggered");
+        AudioManager.Instance?.PlayGameOver();
+
+        AudioManager.Instance?.StopMusic();
         AudioManager.Instance?.PlayGameOver();
 
         Time.timeScale = 0f;

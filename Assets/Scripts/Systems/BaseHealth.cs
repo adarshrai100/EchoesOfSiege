@@ -3,6 +3,7 @@ using UnityEngine;
 public class BaseHealth : MonoBehaviour, IDamageable
 {
     [SerializeField] private float _maxHealth = 100f;
+    [SerializeField] private CastleController _castleController;
 
     private float _currentHealth;
     private bool _isDead;
@@ -22,6 +23,7 @@ public class BaseHealth : MonoBehaviour, IDamageable
 
         _currentHealth -= amount;
         _currentHealth = Mathf.Max(_currentHealth, 0f);
+        _castleController?.PlayDamageFeedback();
 
         Debug.Log("Base Health: " + _currentHealth);
 

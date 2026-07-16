@@ -171,6 +171,7 @@ MonoBehaviour:
   _fireRateIncreasePerLevel: 0.5
   _sellRefundPercent: 0.7
   _towerType: 0
+  _useBallistaShootSound: 1
 --- !u!114 &-4787889600089653411
 MonoBehaviour:
   m_ObjectHideFlags: 0
