@@ -7,6 +7,8 @@ public class TowerVisualController : MonoBehaviour
 
     [Header("Projectile Spawn Points")]
     [SerializeField] private Transform[] _projectileSpawnPoints;
+    [SerializeField] private GameObject _rangeIndicator;
+    public GameObject RangeIndicator => _rangeIndicator;
 
     private Transform _visualRoot;
 
@@ -18,6 +20,8 @@ public class TowerVisualController : MonoBehaviour
     private Vector3 _originalScale;
     private Vector3 _originalLocalPosition;
     private Vector3 _visualOriginalLocalPosition;
+
+
 
     private void Awake()
     {

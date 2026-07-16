@@ -5,9 +5,9 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [Header("Health Settings")]
     [SerializeField] private float _maxHealth = 10f;
     [SerializeField] private int _reward = 10;
-    [SerializeField] private GameObject _deathVFX;
 
     [SerializeField] private Transform _visualRoot;
+    [SerializeField] private EnemyHealthBar _healthBar;
 
     private float _currentHealth;
 
@@ -24,6 +24,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _renderer = GetComponentInChildren<Renderer>();
         _material = _renderer.material;
+        _originalColor = _material.color;
         _originalVisualScale = _visualRoot.localScale;
         _resourceManager = FindFirstObjectByType<ResourceManager>();
     }
@@ -32,10 +33,18 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _isDying = false;
 
+        _currentHealth = _maxHealth;
+
         _visualRoot.localScale = _originalVisualScale;
 
         if (_material != null)
             _material.color = _originalColor;
+
+        if (_healthBar != null)
+        {
+            _healthBar.SetHealth(_maxHealth, _maxHealth);
+            _healthBar.Show(false);
+        }
     }
 
     public void Initialize(ObjectPool pool)
@@ -50,6 +59,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             return;
 
         _currentHealth -= amount;
+
+        if (_healthBar != null)
+        {
+            _healthBar.Show(true);
+            _healthBar.SetHealth(_currentHealth, _maxHealth);
+        }
 
         if (_currentHealth <= 0f)
         {
@@ -66,13 +81,14 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         _resourceManager?.Add(_reward);
 
         FloatingTextManager.Instance?.ShowReward(
-        transform.position + Vector3.up * 2f,
-        _reward);
+            transform.position + Vector3.up * 2f,
+            _reward);
 
-        if (_deathVFX != null)
-        {
-            Instantiate(_deathVFX, transform.position, Quaternion.identity);
-        }
+        AudioManager.Instance?.PlayEnemyDeath();
+
+        DeathParticlePool.Instance?.Play(transform.position);
+
+        _healthBar?.Show(false);    
 
         _visualRoot.localScale = _originalVisualScale;
 

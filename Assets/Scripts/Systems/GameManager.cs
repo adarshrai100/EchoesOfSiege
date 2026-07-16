@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
 
         IsGameOver = true;
         Debug.Log("Game Over Triggered");
-        AudioManager.Instance?.PlayGameOver();
+ 
 
         AudioManager.Instance?.StopMusic();
         AudioManager.Instance?.PlayGameOver();

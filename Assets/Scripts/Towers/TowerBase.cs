@@ -65,6 +65,17 @@ public class TowerBase : MonoBehaviour
     private void Start()
     {
         _currentUpgradeCost = _baseUpgradeCost;
+
+        if (_visualController != null &&
+            _visualController.RangeIndicator != null)
+        {
+            float diameter = (_range * 2f) * 0.15f;
+
+            _visualController.RangeIndicator.transform.localScale =
+                new Vector3(diameter, 0.15f, diameter);
+
+            _visualController.RangeIndicator.SetActive(false);
+        }
     }
 
     public void Initialize(ObjectPool projectilePool, GridCell cell)
@@ -198,8 +209,15 @@ public class TowerBase : MonoBehaviour
         if (_renderer == null) return;
 
         _renderer.GetPropertyBlock(_propertyBlock);
-        _propertyBlock.SetColor("_BaseColor", selected ? _selectedColor : _normalColor);
+        _propertyBlock.SetColor("_BaseColor",
+            selected ? _selectedColor : _normalColor);
         _renderer.SetPropertyBlock(_propertyBlock);
+
+        if (_visualController != null &&
+            _visualController.RangeIndicator != null)
+        {
+            _visualController.RangeIndicator.SetActive(selected);
+        }
     }
 
     private void OnDrawGizmosSelected()

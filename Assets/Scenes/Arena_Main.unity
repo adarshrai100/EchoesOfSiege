@@ -6501,6 +6501,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &834258399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 834258400}
+  - component: {fileID: 834258401}
+  m_Layer: 0
+  m_Name: DeathParticlePool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &834258400
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834258399}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1442291433}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &834258401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834258399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d93b441ebf19ee46bdc9c15a4884f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathParticlePool
+  _particlePrefab: {fileID: 3752045205613272058, guid: 03f07d74aeb62f64e82349485c342a3b, type: 3}
+  _poolSize: 20
 --- !u!1001 &838607742
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10858,6 +10904,7 @@ Transform:
   - {fileID: 1285559622}
   - {fileID: 2033559245}
   - {fileID: 1429158829}
+  - {fileID: 834258400}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1458057287
@@ -18805,6 +18852,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0036cffa88760a64fba420640c9e0fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  _gameplayMusic: {fileID: 8300000, guid: fa146964760514c42a73f447d3d8f6eb, type: 3}
+  _musicVolume: 0.1
   _archerShootClip: {fileID: 8300000, guid: e6446bbb3cfad5147a921f2cd34993fe, type: 3}
   _ballistaShootClip: {fileID: 8300000, guid: cd21157fe49f7f74e98d3972cf122f52, type: 3}
   _enemyHitClip: {fileID: 8300000, guid: 119e6b4a1a290234680661c5b5603818, type: 3}
