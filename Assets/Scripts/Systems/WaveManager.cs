@@ -19,6 +19,9 @@ public class WaveManager : MonoBehaviour
     [SerializeField] private float _healthGrowthPerWave = 2f;
     [SerializeField] private float _speedGrowthPerWave = 0.2f;
 
+    [Header("Game Settings")]
+    [SerializeField] private int _maxWaves = 10;
+
     [Header("Base Enemy Stats")]
     [SerializeField] private float _basicHealth = 10f;
     [SerializeField] private float _basicSpeed = 3f;
@@ -31,15 +34,29 @@ public class WaveManager : MonoBehaviour
 
     private int _currentWave = 0;
     public int CurrentWave => _currentWave;
+    private int _aliveEnemies = 0;
 
     private void Start()
     {
         StartCoroutine(StartWaveLoop());
     }
 
+    public void RegisterEnemySpawn()
+    {
+        _aliveEnemies++;
+        Debug.Log($"Alive Enemies: {_aliveEnemies}");
+    }
+
+    public void RegisterEnemyDespawn()
+    {
+        _aliveEnemies--;
+        Debug.Log($"Alive Enemies: {_aliveEnemies}");
+    }
+
     private IEnumerator StartWaveLoop()
     {
-        while (!GameManager.Instance.IsGameOver)
+        while (!GameManager.Instance.IsGameOver &&
+       _currentWave < _maxWaves)
         {
             yield return new WaitForSeconds(_timeBetweenWaves);
 
@@ -56,6 +73,18 @@ public class WaveManager : MonoBehaviour
 
             // Spawn enemies
             yield return StartCoroutine(SpawnWave());
+        }
+
+        // All waves have been spawned.
+        // Wait until every remaining enemy is gone.
+        while (_aliveEnemies > 0 && !GameManager.Instance.IsGameOver)
+        {
+            yield return null;
+        }
+
+        if (!GameManager.Instance.IsGameOver)
+        {
+            GameManager.Instance.TriggerVictory();
         }
     }
 
@@ -92,6 +121,8 @@ public class WaveManager : MonoBehaviour
         }
 
         GameObject obj = pool.Get();
+
+        RegisterEnemySpawn();
 
         EnemyMovement movement = obj.GetComponent<EnemyMovement>();
         EnemyHealth health = obj.GetComponent<EnemyHealth>();

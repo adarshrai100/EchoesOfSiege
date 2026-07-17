@@ -73,6 +73,8 @@ public class EnemyMovement : MonoBehaviour
     {
         _baseHealth?.TakeDamage(_baseDamage);
 
+        FindFirstObjectByType<WaveManager>()?.RegisterEnemyDespawn();
+
         if (_enemyPool != null)
         {
             _enemyPool.Return(gameObject);
