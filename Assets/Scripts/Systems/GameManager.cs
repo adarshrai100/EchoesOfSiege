@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,21 +20,24 @@ public class GameManager : MonoBehaviour
         IsVictory = false;
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        AudioManager.Instance?.PlayGameplayMusic();
+        yield return new WaitForSeconds(1f); // Match your fade duration
+
+        AudioManager.Instance.PlayGameplayMusic();
     }
 
     public void TriggerGameOver()
     {
-        if (IsGameOver) return;
+        if (IsGameOver)
+            return;
 
         IsGameOver = true;
-        Debug.Log("Game Over Triggered");
- 
 
-        AudioManager.Instance?.StopMusic();
+        Debug.Log("Game Over Triggered");
+
         AudioManager.Instance?.PlayGameOver();
+        AudioManager.Instance?.PlayGameOverMusic();
 
         Time.timeScale = 0f;
     }
@@ -53,7 +57,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Victory!");
 
-        AudioManager.Instance?.StopMusic();
+
+        AudioManager.Instance?.PlayVictoryMusic();
 
         VictoryUI.Instance?.Show();
 
